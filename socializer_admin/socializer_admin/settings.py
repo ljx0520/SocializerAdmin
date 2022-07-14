@@ -166,11 +166,13 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
         'user': '300/minute'
-    }
+    },
+    'DATETIME_FORMAT': "%d/%B/%Y - %H:%M:%S",
 }
 
 SIMPLE_JWT = {
-    'REFRESH_TOKEN_LIFETIME': timezone.timedelta(days=15),
+    'ACCESS_TOKEN_LIFETIME': timezone.timedelta(days=15),
+    'REFRESH_TOKEN_LIFETIME': timezone.timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
 }
 

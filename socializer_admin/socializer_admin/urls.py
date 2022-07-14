@@ -26,8 +26,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-router = DefaultRouter()
-
 urlpatterns = [
     # honeypot
     url(r'^admin/', include(('admin_honeypot.urls', 'admin_honeypot'), namespace='admin_honeypot')),
@@ -39,4 +37,6 @@ urlpatterns = [
 
     url(r'^$', PingPongView.as_view()),
     url(r'docs/', include_docs_urls(title="Socializer Admin Docs")),
+
+    url(r'^v1/', include(('apps.urls.v1.urls', 'v1'), namespace="v1")),
 ]

@@ -12,6 +12,10 @@ User = get_user_model()
 
 
 class PingPongView(APIView):
+    """
+    get:
+        Ping
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
