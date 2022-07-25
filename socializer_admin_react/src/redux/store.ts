@@ -4,33 +4,27 @@ import {actionLog} from "./middleware/actionLog";
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {persistReducer, persistStore} from "redux-persist";
-
-const peristConfig = {
-    key: "root",
-    storage,
-    whitelist: ["user"]  // 对应 user: userSlice.reducer
-}
+import {configSlice} from "./config/config";
+import {navigationSlice} from "./navigation/navigation";
+import {leftSidebarSlice} from "./left-sidebar/left-sidebar";
 
 const rootReducer = combineReducers(
     {
+        config: configSlice.reducer,
+        navigation: navigationSlice.reducer,
+        leftSidebar: leftSidebarSlice.reducer,
     }
 )
-
-const persistedReducer = persistReducer(peristConfig, rootReducer)
-
-// const store = createStore(rootReduce, applyMiddleware(thunk, actionLog));
-
 const store = configureStore(
     {
-        reducer: persistedReducer,
+        reducer: rootReducer,
         middleware: (getDefaultMiddleware => [...getDefaultMiddleware(), actionLog]),
         devTools: true,
-
     }
 );
 
-const persistor = persistStore(store)
 
-export type RootState = ReturnType<typeof store.getState>
+export type AppState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch;
 
-export default {store, persistor};
+export default {store};

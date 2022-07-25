@@ -1,5 +1,6 @@
-import {useSelector as useReduxSelector, TypedUseSelectorHook} from "react-redux";
-import {RootState} from "./store";
+import {TypedUseSelectorHook, useSelector, useDispatch} from "react-redux";
+import {AppDispatch, AppState} from "./store";
 
-export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
+export const useAppDispatch = (): AppDispatch => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
 
