@@ -1,0 +1,192 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+from django.db import models
+
+
+class Activities(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField()
+    activity_category = models.TextField()
+    title = models.TextField()
+    description = models.TextField()
+    preferred_postal_code = models.TextField()
+    preferred_suburb = models.TextField()
+    preferred_state = models.TextField()
+    preferred_country = models.TextField()
+    preferred_price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    preferred_price_currency = models.TextField()
+    preferred_least_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    preferred_date_from_range = models.DateTimeField()
+    preferred_date_to_range = models.DateTimeField()
+    preferred_dayof_week = models.TextField(blank=True, null=True)  # This field type is a guess.
+    is_public = models.BooleanField(blank=True, null=True)
+    image_url = models.JSONField(blank=True, null=True)
+    preferred_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    preferred_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    activity_sub_category = models.TextField(blank=True, null=True)  # This field type is a guess.
+    activity_type = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'activities'
+
+
+class ActivityExclusions(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    activity_id = models.TextField()
+    user_id = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'activity_exclusions'
+        unique_together = (('activity_id', 'user_id'),)
+
+
+class ActivityInterests(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField()
+    activity_user_id = models.TextField()
+    price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    price_currency = models.TextField()
+    total_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    from_datetime = models.DateTimeField()
+    to_datetime = models.DateTimeField()
+    notes = models.TextField()
+    activity = models.ForeignKey(Activities, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'activity_interests'
+
+
+class ActivityTags(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    value = models.TextField()
+    title = models.TextField()
+    is_selectable = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'activity_tags'
+
+
+class Invitations(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    invitation_code = models.TextField()
+    invitation_group = models.TextField()
+    user_id = models.TextField(blank=True, null=True)
+    is_used = models.BooleanField(blank=True, null=True)
+    expiry_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'invitations'
+        unique_together = (('deleted_at', 'invitation_code'),)
+
+
+class Loggings(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField()
+    action = models.TextField()
+    object_id = models.TextField()
+    data = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'loggings'
+
+
+class UserProfileExclusions(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    excluded_user_id = models.TextField()
+    user_id = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'user_profile_exclusions'
+        unique_together = (('excluded_user_id', 'user_id'),)
+
+
+class UserProfiles(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField(unique=True)
+    username = models.TextField()
+    nickname = models.TextField()
+    living_postal_code = models.TextField()
+    living_suburb = models.TextField()
+    living_state = models.TextField()
+    living_country = models.TextField()
+    dob = models.DateTimeField()
+    height = models.BigIntegerField()
+    smoking = models.TextField(blank=True, null=True)
+    drinking = models.TextField(blank=True, null=True)
+    about_me = models.TextField(blank=True, null=True)
+    gender = models.TextField(blank=True, null=True)  # This field type is a guess.
+    education = models.TextField(blank=True, null=True)  # This field type is a guess.
+    ethnicity = models.TextField(blank=True, null=True)  # This field type is a guess.
+    passion = models.TextField(blank=True, null=True)  # This field type is a guess.
+    language = models.TextField(blank=True, null=True)  # This field type is a guess.
+    activity = models.TextField(blank=True, null=True)  # This field type is a guess.
+    is_profile_searchable = models.BooleanField(blank=True, null=True)
+    image_url = models.JSONField(blank=True, null=True)
+    video_url = models.JSONField(blank=True, null=True)
+    vaccination_status = models.TextField(blank=True, null=True)  # This field type is a guess.
+    social_media = models.JSONField(blank=True, null=True)
+    living_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    relationship_status = models.TextField(blank=True, null=True)  # This field type is a guess.
+    living_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    is_available_now = models.BooleanField(blank=True, null=True)
+    invitation_code = models.TextField(blank=True, null=True)
+    pass_code = models.TextField(blank=True, null=True)
+    is_verified = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_profiles'
+        unique_together = (('deleted_at', 'username'),)
+
+
+class UserSuspensions(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField()
+    suspension_from = models.DateTimeField()
+    suspension_until = models.DateTimeField()
+    suspension_reason = models.TextField(blank=True, null=True)
+    suspension_by = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_suspensions'
+        unique_together = (('deleted_at', 'user_id'),)
