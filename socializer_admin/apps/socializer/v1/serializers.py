@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timezone
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -143,3 +144,57 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = "__all__"
+
+
+class DisputeUpdateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    dispute_status = serializers.ChoiceField(required=True,
+                                             choices=(('Processing', 'Processing'), ('Resolved', 'Resolved'),
+                                                      ('Submitted', 'Submitted')))
+    dispute_result = serializers.CharField(required=False, allow_blank=True)
+    dispute_notes = serializers.CharField(required=False, allow_blank=True)
+    dispute_resolved_at = serializers.DateTimeField(required=False, )
+    dispute_resolved_by = serializers.CharField(required=False, allow_blank=True)
+    notes = serializers.JSONField(read_only=True)
+    note = serializers.CharField(write_only=True, required=False, allow_blank=False)
+    dispute_processed_at = serializers.DateTimeField(required=False, )
+    dispute_processed_by = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        dispute_status = attrs.get('dispute_status')
+        user = attrs.get('user')
+
+        if self.instance.dispute_status == "Processing":
+            if dispute_status not in ['Processing', 'Resolved']:
+                return serializers.ValidationError("Invalid Dispute Status")
+        elif self.instance.dispute_status == "Resolved":
+            if dispute_status not in ['Resolved']:
+                return serializers.ValidationError("Invalid Dispute Status")
+
+        if self.instance.dispute_status == "Submitted" and dispute_status == "Processing":
+            attrs['dispute_processed_at'] = datetime.now(timezone.utc)
+            attrs['dispute_processed_by'] = user.id
+        if self.instance.dispute_status == "Processing" and dispute_status == "Resolved":
+            attrs['dispute_resolved_at'] = datetime.now(timezone.utc)
+            attrs['dispute_resolved_by'] = user.id
+
+        note = attrs.get('note')
+        if note:
+            notes = self.instance.notes
+            new_note = {"note": note,
+                        "sent_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                        "user_id": str(uuid.UUID(int=0)),
+                        "nickname": "", "host_or_guest": "Host"}
+            notes.append(new_note)
+            attrs['notes'] = notes
+        return attrs
+
+    class Meta:
+        model = Disputes
+        fields = (
+            "user",
+            "dispute_status", "dispute_result", "dispute_notes", "dispute_resolved_at", "dispute_resolved_by", "notes",
+            "note",
+            "dispute_processed_at", "dispute_processed_by")

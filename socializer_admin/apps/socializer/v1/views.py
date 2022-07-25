@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 from socializer.filters import DisputesFilter
 from socializer.models import Disputes
-from socializer.v1.serializers import DisputesSerializer, DisputeSerializer
+from socializer.v1.serializers import DisputesSerializer, DisputeSerializer, DisputeUpdateSerializer
 
 User = get_user_model()
 
@@ -27,4 +28,6 @@ class DisputesViewSet(
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return DisputeSerializer
+        elif self.action == 'update' or self.action == 'partial_update':
+            return DisputeUpdateSerializer
         return DisputesSerializer
