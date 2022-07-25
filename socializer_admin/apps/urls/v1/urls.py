@@ -18,6 +18,7 @@ from django.urls import include
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
+from socializer.v1.views import DisputesViewSet
 from superusers.v1.views import SuperuserViewSet
 from users.v1.views import UserViewSet
 
@@ -25,6 +26,7 @@ router = SimpleRouter()
 
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'superusers', SuperuserViewSet, basename='superusers')
+router.register(r'disputes', DisputesViewSet, basename='disputes')
 
 urlpatterns = [
     # router

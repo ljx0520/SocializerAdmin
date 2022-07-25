@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django_filters',
     # login
     'rest_framework.authtoken',
+    # apps
+    'socializer.apps.SocializerConfig'
 ]
 
 MIDDLEWARE = [
@@ -94,15 +96,33 @@ DATABASES = {
         'USER': 'doadmin',
         'PASSWORD': 'My3mu32PkgUSaP6n'
     },
-    'socialzer-user': {
+    'socializer-user': {
         'HOST': "socialzer-pg-do-user-7340515-0.b.db.ondigitalocean.com",
         'PORT': 25060,
         'NAME': 'socialzer-user',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'doadmin',
         'PASSWORD': 'My3mu32PkgUSaP6n'
+    },
+    'socializer-activity': {
+        'HOST': "socialzer-pg-do-user-7340515-0.b.db.ondigitalocean.com",
+        'PORT': 25060,
+        'NAME': 'socialzer-activity',
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': 'doadmin',
+        'PASSWORD': 'My3mu32PkgUSaP6n'
+    },
+    'socializer-order': {
+        'HOST': "socialzer-pg-do-user-7340515-0.b.db.ondigitalocean.com",
+        'PORT': 25060,
+        'NAME': 'socialzer-order',
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': 'doadmin',
+        'PASSWORD': 'My3mu32PkgUSaP6n'
     }
 }
+
+DATABASE_ROUTERS = ['router.db_router.DbRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -149,9 +169,10 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+    'PAGE_SIZE': 10,
+    # 'DEFAULT_FILTER_BACKENDS': [
+    #     'django_filters.rest_framework.DjangoFilterBackend'
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
@@ -177,3 +198,25 @@ SIMPLE_JWT = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}

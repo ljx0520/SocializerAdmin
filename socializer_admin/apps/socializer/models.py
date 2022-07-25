@@ -1,0 +1,216 @@
+from django.contrib.postgres.fields import ArrayField
+from django.db import models
+
+
+class Disputes(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.UUIDField()
+    dispute_object = models.TextField()
+    object_id = models.UUIDField()
+    dispute_type = models.TextField(blank=True, null=True)
+    dispute_reason = models.TextField(blank=True, null=True)
+    dispute_status = models.TextField()
+    dispute_result = models.TextField(blank=True, null=True)
+    dispute_notes = models.TextField(blank=True, null=True)
+    dispute_resolved_at = models.DateTimeField(blank=True, null=True)
+    dispute_resolved_by = models.TextField(blank=True, null=True)
+    notes = models.JSONField(blank=True, null=True)
+    dispute_processed_at = models.DateTimeField(blank=True, null=True)
+    dispute_processed_by = models.TextField(blank=True, null=True)
+    attachments = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        app_label = 'socializer-user'
+        db_table = 'disputes'
+
+
+class UserProfiles(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField(unique=True)
+    username = models.TextField()
+    nickname = models.TextField()
+    living_postal_code = models.TextField()
+    living_suburb = models.TextField()
+    living_state = models.TextField()
+    living_country = models.TextField()
+    dob = models.DateTimeField()
+    height = models.BigIntegerField()
+    smoking = models.TextField(blank=True, null=True)
+    drinking = models.TextField(blank=True, null=True)
+    about_me = models.TextField(blank=True, null=True)
+    gender = ArrayField(models.CharField(max_length=512))
+    education = ArrayField(models.CharField(max_length=512))
+    ethnicity = ArrayField(models.CharField(max_length=512))
+    passion = ArrayField(models.CharField(max_length=512))
+    language = ArrayField(models.CharField(max_length=512))
+    activity = ArrayField(models.CharField(max_length=512))
+    is_profile_searchable = models.BooleanField(blank=True, null=True)
+    image_url = models.JSONField(blank=True, null=True)
+    video_url = models.JSONField(blank=True, null=True)
+    vaccination_status = ArrayField(models.CharField(max_length=512))
+    social_media = models.JSONField(blank=True, null=True)
+    living_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    relationship_status = ArrayField(models.CharField(max_length=512))
+    living_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    is_available_now = models.BooleanField(blank=True, null=True)
+    invitation_code = models.TextField(blank=True, null=True)
+    pass_code = models.TextField(blank=True, null=True)
+    is_verified = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        app_label = 'socializer-activity'
+        db_table = 'user_profiles'
+        unique_together = (('deleted_at', 'username'),)
+
+
+class Activities(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    user_id = models.TextField()
+    activity_category = models.TextField()
+    title = models.TextField()
+    description = models.TextField()
+    preferred_postal_code = models.TextField()
+    preferred_suburb = models.TextField()
+    preferred_state = models.TextField()
+    preferred_country = models.TextField()
+    preferred_price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    preferred_price_currency = models.TextField()
+    preferred_least_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    preferred_date_from_range = models.DateTimeField()
+    preferred_date_to_range = models.DateTimeField()
+    preferred_dayof_week = ArrayField(models.CharField(max_length=512))
+    is_public = models.BooleanField(blank=True, null=True)
+    image_url = models.JSONField(blank=True, null=True)
+    preferred_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    preferred_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    activity_sub_category = ArrayField(models.CharField(max_length=512))
+    activity_type = models.TextField()
+
+    class Meta:
+        managed = False
+        app_label = 'socializer-activity'
+        db_table = 'activities'
+
+
+class Offers(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    link_offer_id = models.TextField(blank=True, null=True)
+    creator_id = models.TextField()
+    payer_id = models.TextField()
+    payee_id = models.TextField()
+    activity_category = models.TextField()
+    title = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    notes_payee = models.TextField(blank=True, null=True)
+    notes_payer = models.TextField(blank=True, null=True)
+    from_datetime = models.DateTimeField()
+    to_datetime = models.DateTimeField()
+    total_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    price_currency = models.TextField()
+    total_price = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    meeting_postal_code = models.TextField()
+    meeting_address = models.TextField()
+    meeting_suburb = models.TextField()
+    meeting_state = models.TextField()
+    meeting_country = models.TextField()
+    meeting_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    meeting_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    offer_status = models.TextField()
+    offer_sn = models.BinaryField(unique=True)
+    activity_sub_category = ArrayField(models.CharField(max_length=512))
+    image_url = models.JSONField(blank=True, null=True)
+    notes = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        app_label = 'socializer-order'
+        db_table = 'offers'
+
+
+class Orders(models.Model):
+    id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.BigIntegerField(blank=True, null=True)
+    payer_id = models.TextField()
+    payee_id = models.TextField()
+    offer_id = models.TextField()
+    activity_category = models.TextField()
+    title = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    notes_payee = models.TextField(blank=True, null=True)
+    notes_payer = models.TextField(blank=True, null=True)
+    from_datetime = models.DateTimeField()
+    to_datetime = models.DateTimeField()
+    total_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    price_currency = models.TextField()
+    total_price = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    meeting_postal_code = models.TextField()
+    meeting_address = models.TextField()
+    meeting_suburb = models.TextField()
+    meeting_state = models.TextField()
+    meeting_country = models.TextField()
+    meeting_lat = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    meeting_long = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    order_status = models.TextField()
+    order_sn = models.BinaryField(unique=True)
+    payment_type = models.TextField()
+    payment_id = models.TextField(blank=True, null=True)
+    paid_at = models.DateTimeField(blank=True, null=True)
+    paid_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    is_refunded = models.BooleanField(blank=True, null=True)
+    refund_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    refund_at = models.DateTimeField(blank=True, null=True)
+    is_paid_out = models.BooleanField(blank=True, null=True)
+    payout_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    payout_at = models.DateTimeField(blank=True, null=True)
+    fee_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    cancellation_requested_at = models.DateTimeField(blank=True, null=True)
+    paid_credit_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    paid_credit_at = models.DateTimeField(blank=True, null=True)
+    finalized_at = models.DateTimeField(blank=True, null=True)
+    credit_payment_id = models.TextField(blank=True, null=True)
+    extended_paid_at = models.DateTimeField(blank=True, null=True)
+    extended_price_per_hour = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    extended_datetime = models.DateTimeField(blank=True, null=True)
+    is_extended = models.BooleanField(blank=True, null=True)
+    extended_duration_hour = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    extended_total_price = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    extended_paid_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    extended_payment_id = models.TextField(blank=True, null=True)
+    extended_price_currency = models.TextField()
+    extended_paid_credit_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    extended_credit_payment_id = models.TextField(blank=True, null=True)
+    extended_payment_type = models.TextField()
+    extended_paid_credit_at = models.DateTimeField(blank=True, null=True)
+    extend_finalized_at = models.DateTimeField(blank=True, null=True)
+    extend_status = models.TextField()
+    extend_id = models.TextField(blank=True, null=True)
+    extend_sn = models.BinaryField(blank=True, null=True)
+    activity_sub_category = ArrayField(models.CharField(max_length=512))
+    meeting_code = models.TextField(blank=True, null=True)
+    image_url = models.JSONField(blank=True, null=True)
+    notes = models.JSONField(blank=True, null=True)
+    extended_paid_processing_fee = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    paid_processing_fee = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        app_label = 'socializer-order'
+        db_table = 'orders'
