@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {useRouter} from "next/router";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import Centered from "./centered";
-import Layout1 from "./layout-1";
+import Layout1 from "layouts/layout-1";
 
 export type LayoutProps = {
     children: React.ReactNode;
@@ -22,16 +22,15 @@ const Layouts: React.FC<LayoutProps> = ({children}) => {
 
     const router = useRouter();
     const {pathname} = router;
+
     switch (pathname) {
         case "/404":
         case "/500":
             return <Centered>{children}</Centered>;
-        case "/login-1":
+        case "/login":
         case "/logout":
             return <Centered>{children}</Centered>;
         case "/landing":
-        case "/login-2":
-        case "/login-3":
         case "/sidebars":
             return <>{children}</>;
         default:

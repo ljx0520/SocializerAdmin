@@ -3,7 +3,7 @@ import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {setConfig} from "../../redux/config/config";
 import Image from "next/image";
-import appLogo from "../../assets/app_icon.png";
+import appLogo from "assets/app_icon.png";
 
 const Logo: React.FC = () => {
     const dispatch = useAppDispatch();

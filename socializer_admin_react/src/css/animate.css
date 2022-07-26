@@ -9,6 +9,8 @@
   --animate-duration: 1s;
   --animate-delay: 1s;
   --animate-repeat: 1;
+  --toastify-font-family: 'poppins';
+  --toastify-text-color-light: #121212;
 }
 .animate__animated {
   -webkit-animation-duration: 1s;

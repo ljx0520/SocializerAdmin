@@ -3,7 +3,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import {Menu, Transition} from "@headlessui/react";
 import {Fragment} from "react";
-import appLogo from "../../assets/app_icon.png";
+import appLogo from "assets/app_icon.png";
 
 const Dropdown: React.FC = () => {
     return (

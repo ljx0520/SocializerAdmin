@@ -1,4 +1,3 @@
-import {createSlice} from "@reduxjs/toolkit";
 import {RiDashboardFill} from "react-icons/ri";
 import {TbReport} from "react-icons/tb";
 
@@ -13,7 +12,8 @@ export type NavigationState = {
     };
 };
 
-const initialState: NavigationState[] = [
+
+export const navigations: NavigationState[] = [
     {
         title: "Applications",
         items: [
@@ -26,20 +26,9 @@ const initialState: NavigationState[] = [
             {
                 url: "/disputes",
                 icon: <TbReport size={20}/>,
-                title: "Disputes",
+                title: "Reports & Requests",
                 items: [],
             },
         ],
     },
 ];
-
-// Define the initial state using that type
-
-export const navigationSlice = createSlice({
-    name: "navigation",
-    // `createSlice` will infer the state type from the `initialState` argument
-    initialState,
-    reducers: {},
-});
-
-export default navigationSlice.reducer;

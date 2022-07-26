@@ -5,13 +5,11 @@ import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {persistReducer, persistStore} from "redux-persist";
 import {configSlice} from "./config/config";
-import {navigationSlice} from "./navigation/navigation";
 import {leftSidebarSlice} from "./left-sidebar/left-sidebar";
 
 const rootReducer = combineReducers(
     {
         config: configSlice.reducer,
-        navigation: navigationSlice.reducer,
         leftSidebar: leftSidebarSlice.reducer,
     }
 )

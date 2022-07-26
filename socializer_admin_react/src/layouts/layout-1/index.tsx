@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Navbar1 from "components/navbar-1";
 import LeftSidebar1 from "components/left-sidebar-1";
-import {useAppSelector} from "../../redux/hooks";
+import {useAppSelector} from "redux/hooks";
 
 export type Layout1Props = {
     children: React.ReactNode;

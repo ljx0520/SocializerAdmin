@@ -103,19 +103,6 @@ input[type="number"] {
   width: 0 !important;
 }
 
-.bg-1 {
-  background: url(/images/bg-login-1.jpg) no-repeat 0 0 fixed;
-  background-size: cover;
-}
-.bg-login-2 {
-  background: url(/images/bg-login-2.png) no-repeat 0 0 fixed;
-  background-size: cover;
-}
-.bg-login-3 {
-  background: url(/images/bg-login-2.png) no-repeat 0 0 fixed;
-  background-size: cover;
-}
-
 /* social media colors */
 .text-facebook {
   color: #365397;

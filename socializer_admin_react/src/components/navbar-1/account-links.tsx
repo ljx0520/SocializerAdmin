@@ -20,7 +20,7 @@ const AccountLinks: React.FC = () => {
             name: "Profile",
         },
         {
-            url: "/",
+            url: "/logout",
             icon: <FiLogIn size={18} className="stroke-current"/>,
             name: "Logout",
         },
