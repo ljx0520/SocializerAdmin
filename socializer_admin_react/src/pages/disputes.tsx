@@ -226,7 +226,9 @@ const Tab0 = () => {
     }
 
     useEffect(() => {
-        searchDispute(page.page_number);
+        return () => {
+            searchDispute(page.page_number);
+        }
     }, [])
 
     const handlePrev = () => {
@@ -281,8 +283,11 @@ const Tab1 = () => {
     }
 
     useEffect(() => {
-        searchDispute(page.page_number);
+        return () => {
+            searchDispute(page.page_number);
+        }
     }, [])
+
 
     const handlePrev = () => {
         searchDispute(page.page_number - 1);
@@ -298,7 +303,7 @@ const Tab1 = () => {
 };
 
 const Tab2 = () => {
-    const [data, setData] = useState(() => [])
+    const [data, setData] = useState<Dispute[]>(() => [])
     const [page, setPage] = useState<IPage>(() => defaultPage)
 
     const table = useReactTable({
@@ -336,8 +341,11 @@ const Tab2 = () => {
     }
 
     useEffect(() => {
-        searchDispute(page.page_number);
+        return () => {
+            searchDispute(page.page_number);
+        }
     }, [])
+
 
     const handlePrev = () => {
         searchDispute(page.page_number - 1);

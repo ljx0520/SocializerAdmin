@@ -21,6 +21,9 @@ async function search(req: NextApiRequest, res: NextApiResponse) {
             params: {
                 dispute_status: dispute_status,
                 page: page
+            },
+            headers: {
+                'Authorization': `Bearer ${session.token}`
             }
         }
     ).then(async (response) => {

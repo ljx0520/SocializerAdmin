@@ -12,9 +12,7 @@ const defaultToastOptions: ToastOptions = {
 }
 
 export const notify = (message: string, type: "success" | "warn" | "error" | "info") => {
-
     switch (type) {
-
         case "success":
             toast.success(message, defaultToastOptions);
             break;
@@ -25,9 +23,6 @@ export const notify = (message: string, type: "success" | "warn" | "error" | "in
             toast.error(message, defaultToastOptions);
             break;
         case "info":
-            toast.info(message, defaultToastOptions);
-            break;
-        default:
             toast.info(message, defaultToastOptions);
             break;
     }

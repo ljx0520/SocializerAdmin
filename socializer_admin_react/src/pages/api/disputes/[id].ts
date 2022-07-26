@@ -6,34 +6,30 @@ import request from 'service/fetch';
 import {consoleLog} from "utils";
 import {ironOptions, BASE_URL} from "lib";
 
-export default withIronSessionApiRoute(login, ironOptions);
+export default withIronSessionApiRoute(getDetail, ironOptions);
 
-async function login(req: NextApiRequest, res: NextApiResponse) {
+// get disputes list
+async function getDetail(req: NextApiRequest, res: NextApiResponse) {
     const session: ISession = req.session;
     const cookies = Cookie.fromApiRoute(req, res);
-    const {username = '', password = ''} = req.body;
+    const { id } = req.query
 
-    const url = `${BASE_URL}/token/`;
+    const url = `${BASE_URL}/v1/disputes/${id}`;
 
-    await request.post(
-        url,
-        {
-            username: username,
-            password: password
-        },
+    await request.get(
+        url, {
+            headers: {
+                'Authorization': `Bearer ${session.token}`
+            }
+        }
     ).then(async (response) => {
 
         const {data} = response as any;
 
-        // save session
-        session.token = data.access;
-        await session.save();
-
-
-
         res.status(200).json({
             code: 200,
-            msg: "Login Success"
+            msg: "Success",
+            data: data
         });
     }).catch((error: any) => {
         consoleLog(error)
