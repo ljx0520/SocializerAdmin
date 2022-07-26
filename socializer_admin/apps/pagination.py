@@ -11,6 +11,7 @@ class CustomPageNumber(pagination.PageNumberPagination):
         return Response(OrderedDict([
             ('count', self.page.paginator.count),
             ('page_size', self.page_size),
+            ('page_number', self.page.number),
             ('from', self.page_size * (self.page.number - 1) + 1),
             ('to', self.page_size * (self.page.number - 1) + len(data)),
             ('next', self.get_next_link()),

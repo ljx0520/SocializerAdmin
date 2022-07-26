@@ -6,86 +6,87 @@ import {
     Pills,
     VerticalTabs,
 } from "components/tabs";
-import {useReactTable, getCoreRowModel, createColumnHelper, flexRender} from "@tanstack/react-table";
-import {useState} from "react";
+import {useReactTable, getCoreRowModel, createColumnHelper, flexRender, Table} from "@tanstack/react-table";
+import {MouseEventHandler, useEffect, useState} from "react";
+import {trackPromise} from "react-promise-tracker";
+import request from "../service/fetch";
+import {notify} from "../utils/notify";
+import {defaultPage, IPage} from "../lib";
 
-type Person = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    status: string
-    progress: number
+export interface Note {
+    note: string;
+    sent_at: Date;
+    user_id: string;
+    nickname: string;
+    host_or_guest: string;
 }
 
-const defaultData: Person[] = [
-    {
-        firstName: 'tanner',
-        lastName: 'linsley',
-        age: 24,
-        visits: 100,
-        status: 'In Relationship',
-        progress: 50,
-    },
-    {
-        firstName: 'tandy',
-        lastName: 'miller',
-        age: 40,
-        visits: 40,
-        status: 'Single',
-        progress: 80,
-    },
-    {
-        firstName: 'joe',
-        lastName: 'dirte',
-        age: 45,
-        visits: 20,
-        status: 'Complicated',
-        progress: 10,
-    },
-]
+export interface Dispute {
+    id: string;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at: number;
+    user_id: string;
+    dispute_object: string;
+    object_id: string;
+    dispute_type: string;
+    dispute_reason: string;
+    dispute_status: string;
+    dispute_result: string;
+    dispute_notes: string;
+    dispute_resolved_at: Date;
+    dispute_resolved_by: string;
+    notes: Note[];
+    dispute_processed_at: Date;
+    dispute_processed_by: string;
+    attachments: any[];
+}
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<Dispute>()
 
 const columns = [
-    columnHelper.accessor('firstName', {
+    columnHelper.accessor('id', {
+        header: 'Id',
+        cell: info => info.getValue().substring(0, 8),
+        footer: info => info.column.id,
+    }),
+    columnHelper.accessor('dispute_object', {
+        header: 'Dispute Object',
         cell: info => info.getValue(),
         footer: info => info.column.id,
     }),
-    columnHelper.accessor(row => row.lastName, {
+    columnHelper.accessor('dispute_type', {
         id: 'lastName',
-        cell: info => <i>{info.getValue()}</i>,
-        header: () => <span>Last Name</span>,
+        cell: info => info.getValue(),
+        header: () => 'Dispute Type',
         footer: info => info.column.id,
     }),
-    columnHelper.accessor('age', {
-        header: () => 'Age',
+    columnHelper.accessor('created_at', {
+        header: () => 'Created At',
         cell: info => info.renderValue(),
         footer: info => info.column.id,
     }),
-    columnHelper.accessor('visits', {
-        header: () => <span>Visits</span>,
+    columnHelper.accessor('dispute_processed_at', {
+        header: () => 'Processed At',
+        cell: info => info.renderValue(),
         footer: info => info.column.id,
     }),
-    columnHelper.accessor('status', {
-        header: 'Status',
-        footer: info => info.column.id,
-    }),
-    columnHelper.accessor('progress', {
-        header: 'Profile Progress',
+    columnHelper.accessor('dispute_resolved_at', {
+        header: () => 'Resolved At',
+        cell: info => info.renderValue(),
         footer: info => info.column.id,
     }),
 ]
 
-const Tab0 = () => {
-    const [data, setData] = useState(() => [...defaultData])
+interface ITabProps {
+    table: Table<Dispute>;
+    page: IPage;
+    handlePrev: Function;
+    handleNext: Function;
+}
 
-    const table = useReactTable({
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-    })
-
+const Tab = (props: ITabProps) => {
+    const {table, page, handlePrev, handleNext} = props;
     return (
         <div className="w-full overflow-x-auto">
             <table className="w-full text-left table-auto">
@@ -121,57 +122,220 @@ const Tab0 = () => {
             </table>
 
             <div className="mt-3">
-                <div>
-                    <div className="text-sm text-slate-500 gn qe">
+                <div className="flex items-center justify-start w-full">
+                    <div className="flex ml-2">
                         Showing
-                        <span>10</span>
+                        <div className="font-semibold ml-1 mr-1">{`${page.from}`}</div>
+                        to
+                        <div className="font-semibold ml-1 mr-1">{`${page.to}`}</div>
+                        of
+                        <div className="font-semibold ml-1 mr-1">{`${page.count}`}</div>
+                        results
                     </div>
-                    <button
-                        className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'<- Previous'}
-                    </button>
-                    <button
-                        className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'Next ->'}
-                    </button>
+                    <span className="ml-auto"></span>
+
+                    {
+                        page.previous != null ?
+                            <button
+                                className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2"
+                                onClick={() => handlePrev()}
+                                disabled={false}
+                            >
+                                {'<- Previous'}
+                            </button> :
+                            <button
+                                className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                onClick={() => handlePrev()}
+                                disabled={true}
+                            >
+                                {'<- Previous'}
+                            </button>
+                    }
+                    {
+                        page.next != null ?
+                            <button
+                                className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                                onClick={() => handleNext()}
+                                disabled={false}
+                            >
+                                {'Next ->'}
+                            </button> :
+                            <button
+                                className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                onClick={() => handleNext()}
+                                disabled={true}
+                            >
+                                {'Next ->'}
+                            </button>
+                    }
                 </div>
-
             </div>
-
-
         </div>
+    );
+};
+
+const Tab0 = () => {
+    const [data, setData] = useState(() => [])
+    const [page, setPage] = useState<IPage>(() => defaultPage)
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
+
+    const searchDispute = (page: number) => {
+        trackPromise(
+            request
+                .post('/api/disputes/search', {
+                    dispute_status: 'Submitted',
+                    page: page
+                })
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        var data = res.data.data;
+                        var newPage: IPage = {
+                            count: data.count,
+                            from: data.from,
+                            next: data.next,
+                            page_number: data.page_number,
+                            page_size: data.page_size,
+                            previous: data.previous,
+                            to: data.to
+                        };
+                        console.log(data)
+                        setPage(newPage);
+                        setData(data.results);
+                    } else {
+                        notify(res.data.msg, "warn")
+                    }
+                }));
+    }
+
+    useEffect(() => {
+        searchDispute(page.page_number);
+    }, [])
+
+    const handlePrev = () => {
+        searchDispute(page.page_number - 1);
+    };
+
+    const handleNext = () => {
+        searchDispute(page.page_number + 1);
+    };
+
+    return (
+        <Tab table={table} page={page} handlePrev={handlePrev} handleNext={handleNext}/>
     );
 };
 
 const Tab1 = () => {
+    const [data, setData] = useState(() => [])
+    const [page, setPage] = useState<IPage>(() => defaultPage)
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
+
+    const searchDispute = (page: number) => {
+        trackPromise(
+            request
+                .post('/api/disputes/search', {
+                    dispute_status: 'Processing',
+                    page: page
+                })
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        var data = res.data.data;
+                        var newPage: IPage = {
+                            count: data.count,
+                            from: data.from,
+                            next: data.next,
+                            page_number: data.page_number,
+                            page_size: data.page_size,
+                            previous: data.previous,
+                            to: data.to
+                        };
+                        console.log(data)
+                        setPage(newPage);
+                        setData(data.results);
+                    } else {
+                        notify(res.data.msg, "warn")
+                    }
+                }));
+    }
+
+    useEffect(() => {
+        searchDispute(page.page_number);
+    }, [])
+
+    const handlePrev = () => {
+        searchDispute(page.page_number - 1);
+    };
+
+    const handleNext = () => {
+        searchDispute(page.page_number + 1);
+    };
+
     return (
-        <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Molestie ac feugiat sed
-            lectus vestibulum mattis ullamcorper velit sed. Condimentum vitae sapien
-            pellentesque habitant morbi. Nec ullamcorper sit amet risus nullam eget
-            felis. Dignissim sodales ut eu sem integer vitae justo eget. In pellentesque
-            massa placerat duis ultricies.
-        </div>
+        <Tab table={table} page={page} handlePrev={handlePrev} handleNext={handleNext}/>
     );
 };
 
 const Tab2 = () => {
+    const [data, setData] = useState(() => [])
+    const [page, setPage] = useState<IPage>(() => defaultPage)
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
+
+    const searchDispute = (page: number) => {
+        trackPromise(
+            request
+                .post('/api/disputes/search', {
+                    dispute_status: 'Resolved',
+                    page: page
+                })
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        var data = res.data.data;
+                        var newPage: IPage = {
+                            count: data.count,
+                            from: data.from,
+                            next: data.next,
+                            page_number: data.page_number,
+                            page_size: data.page_size,
+                            previous: data.previous,
+                            to: data.to
+                        };
+                        console.log(data)
+                        setPage(newPage);
+                        setData(data.results);
+                    } else {
+                        notify(res.data.msg, "warn")
+                    }
+                }));
+    }
+
+    useEffect(() => {
+        searchDispute(page.page_number);
+    }, [])
+
+    const handlePrev = () => {
+        searchDispute(page.page_number - 1);
+    };
+
+    const handleNext = () => {
+        searchDispute(page.page_number + 1);
+    };
+
     return (
-        <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Molestie ac feugiat sed
-            lectus vestibulum mattis ullamcorper velit sed. Condimentum vitae sapien
-            pellentesque habitant morbi. Nec ullamcorper sit amet risus nullam eget
-            felis. Dignissim sodales ut eu sem integer vitae justo eget. In pellentesque
-            massa placerat duis ultricies.
-        </div>
+        <Tab table={table} page={page} handlePrev={handlePrev} handleNext={handleNext}/>
     );
 };
 
