@@ -11,11 +11,12 @@ import {MouseEventHandler, useEffect, useState} from "react";
 import {trackPromise} from "react-promise-tracker";
 import request from "../service/fetch";
 import {notify} from "../utils/notify";
-import {defaultPage, IPage} from "../lib";
+import {defaultPage, formatDate, IPage} from "../lib";
+import Link from "next/link";
 
 export interface Note {
     note: string;
-    sent_at: Date;
+    sent_at: string;
     user_id: string;
     nickname: string;
     host_or_guest: string;
@@ -23,8 +24,8 @@ export interface Note {
 
 export interface Dispute {
     id: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
     deleted_at: number;
     user_id: string;
     dispute_object: string;
@@ -34,10 +35,10 @@ export interface Dispute {
     dispute_status: string;
     dispute_result: string;
     dispute_notes: string;
-    dispute_resolved_at: Date;
+    dispute_resolved_at: string;
     dispute_resolved_by: string;
     notes: Note[];
-    dispute_processed_at: Date;
+    dispute_processed_at: string;
     dispute_processed_by: string;
     attachments: any[];
 }
@@ -47,7 +48,13 @@ const columnHelper = createColumnHelper<Dispute>()
 const columns = [
     columnHelper.accessor('id', {
         header: 'Id',
-        cell: info => info.getValue().substring(0, 8),
+        cell: info => {
+            return <Link key={info.getValue() as string} href={`/dispute/${info.getValue() as string}`}>
+                <a className="" target={"_blank"}>
+                    <span className="title text-blue-500">{info.getValue().substring(0, 8)}</span>
+                </a>
+            </Link>
+        },
         footer: info => info.column.id,
     }),
     columnHelper.accessor('dispute_object', {
@@ -63,17 +70,23 @@ const columns = [
     }),
     columnHelper.accessor('created_at', {
         header: () => 'Created At',
-        cell: info => info.renderValue(),
+        cell: info => {
+            return <span>{formatDate(info.getValue())}</span>
+        },
         footer: info => info.column.id,
     }),
     columnHelper.accessor('dispute_processed_at', {
         header: () => 'Processed At',
-        cell: info => info.renderValue(),
+        cell: info => {
+            return <span>{formatDate(info.getValue())}</span>
+        },
         footer: info => info.column.id,
     }),
     columnHelper.accessor('dispute_resolved_at', {
         header: () => 'Resolved At',
-        cell: info => info.renderValue(),
+        cell: info => {
+            return <span>{formatDate(info.getValue())}</span>
+        },
         footer: info => info.column.id,
     }),
 ]
@@ -203,7 +216,7 @@ const Tab0 = () => {
                             previous: data.previous,
                             to: data.to
                         };
-                        console.log(data)
+                        // console.log(data)
                         setPage(newPage);
                         setData(data.results);
                     } else {
@@ -258,7 +271,7 @@ const Tab1 = () => {
                             previous: data.previous,
                             to: data.to
                         };
-                        console.log(data)
+                        // console.log(data)
                         setPage(newPage);
                         setData(data.results);
                     } else {
@@ -313,7 +326,7 @@ const Tab2 = () => {
                             previous: data.previous,
                             to: data.to
                         };
-                        console.log(data)
+                        // console.log(data)
                         setPage(newPage);
                         setData(data.results);
                     } else {

@@ -1,4 +1,5 @@
 import jwt_decode from 'jwt-decode';
+const {format} = require('date-fns');
 
 export const BASE_URL = "http://0.0.0.0:8000";
 
@@ -69,4 +70,12 @@ export const defaultPage: IPage = {
     to: 0,
     next: null,
     previous: null
+}
+
+export function formatDate(date: string) : string  {
+    if (date === '1-01-01 00:00:00') {
+        return "NA"
+    }
+    var parsedDate = new Date(date);
+    return format(parsedDate, 'EEEE, MMMM do, yyyy hh:mm a' )
 }
