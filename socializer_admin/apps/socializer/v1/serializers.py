@@ -19,6 +19,17 @@ class DisputesSerializer(serializers.ModelSerializer):
 
 class DisputeSerializer(serializers.ModelSerializer):
     object = serializers.SerializerMethodField()
+    user_profile = serializers.SerializerMethodField()
+
+    def get_user_profile(self, obj):
+        try:
+            user_profile = UserProfiles.objects.get(user_id=obj.user_id)
+            serializer = UserProfileSerializer(user_profile, many=False,
+                                               context={'request': self.context['request']})
+            return serializer.data
+        except Exception as e:
+            # cannot find
+            return None
 
     def get_object(self, obj):
         if obj.dispute_object == "UserProfile":
