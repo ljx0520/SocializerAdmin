@@ -16,6 +16,8 @@ async function getDetail(req: NextApiRequest, res: NextApiResponse) {
 
     const url = `${BASE_URL}/v1/disputes/${id}`;
 
+
+
     await request.get(
         url, {
             headers: {

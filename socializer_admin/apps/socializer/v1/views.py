@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from socializer.filters import DisputesFilter
@@ -24,6 +25,9 @@ class DisputesViewSet(
     ordering_fields = ['created_at', 'dispute_processed_at']
 
     lookup_field = "id"
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

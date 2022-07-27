@@ -77,5 +77,5 @@ export function formatDate(date: string) : string  {
         return "NA"
     }
     var parsedDate = new Date(date);
-    return format(parsedDate, 'EEEE, MMMM do, yyyy hh:mm a' )
+    return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a' )
 }

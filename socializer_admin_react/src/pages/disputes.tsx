@@ -13,6 +13,8 @@ import request from "../service/fetch";
 import {notify} from "../utils/notify";
 import {defaultPage, formatDate, IPage} from "../lib";
 import Link from "next/link";
+import Widget from "../components/widget";
+import ReactTimeago from "react-timeago";
 
 export interface Note {
     note: string;
@@ -71,7 +73,7 @@ const columns = [
     columnHelper.accessor('created_at', {
         header: () => 'Created At',
         cell: info => {
-            return <span>{formatDate(info.getValue())}</span>
+            return <span>{formatDate(info.getValue())} (<ReactTimeago date={info.getValue()}/>) </span>
         },
         footer: info => info.column.id,
     }),
@@ -101,89 +103,91 @@ interface ITabProps {
 const Tab = (props: ITabProps) => {
     const {table, page, handlePrev, handleNext} = props;
     return (
-        <div className="w-full overflow-x-auto">
-            <table className="w-full text-left table-auto">
-                <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map(header => (
-                            <th key={header.id}
-                                className="px-3 py-2 text-xs font-medium tracking-wider text-gray-500 uppercase border-b border-gray-100 leading-4 dark:border-gray-800">
-                                {header.isPlaceholder
-                                    ? null
-                                    : flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-                </thead>
-                <tbody>
-                {table.getRowModel().rows.map(row => (
-                    <tr key={row.id}>
-                        {row.getVisibleCells().map(cell => (
-                            <td key={cell.id}
-                                className="px-3 py-2 border-b border-gray-100 dark:border-gray-800 whitespace-nowrap">
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <Widget>
+            <div className="w-full overflow-x-auto">
+                <table className="w-full text-left table-auto">
+                    <thead>
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map(header => (
+                                <th key={header.id}
+                                    className="px-3 py-2 text-xs font-medium tracking-wider text-gray-500 uppercase border-b border-gray-100 leading-4 dark:border-gray-800">
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </thead>
+                    <tbody>
+                    {table.getRowModel().rows.map(row => (
+                        <tr key={row.id} className="even:bg-gray-100">
+                            {row.getVisibleCells().map(cell => (
+                                <td key={cell.id}
+                                    className="px-3 py-2 border-b border-gray-100 dark:border-gray-800 whitespace-nowrap">
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
 
-            <div className="mt-3">
-                <div className="flex items-center justify-start w-full">
-                    <div className="flex ml-2">
-                        Showing
-                        <div className="font-semibold ml-1 mr-1">{`${page.from}`}</div>
-                        to
-                        <div className="font-semibold ml-1 mr-1">{`${page.to}`}</div>
-                        of
-                        <div className="font-semibold ml-1 mr-1">{`${page.count}`}</div>
-                        results
+                <div className="mt-3">
+                    <div className="flex items-center justify-start w-full">
+                        <div className="flex ml-2">
+                            Showing
+                            <div className="font-semibold ml-1 mr-1">{`${page.from}`}</div>
+                            to
+                            <div className="font-semibold ml-1 mr-1">{`${page.to}`}</div>
+                            of
+                            <div className="font-semibold ml-1 mr-1">{`${page.count}`}</div>
+                            results
+                        </div>
+                        <span className="ml-auto"></span>
+
+                        {
+                            page.previous != null ?
+                                <button
+                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2"
+                                    onClick={() => handlePrev()}
+                                    disabled={false}
+                                >
+                                    {'<- Previous'}
+                                </button> :
+                                <button
+                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                    onClick={() => handlePrev()}
+                                    disabled={true}
+                                >
+                                    {'<- Previous'}
+                                </button>
+                        }
+                        {
+                            page.next != null ?
+                                <button
+                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                                    onClick={() => handleNext()}
+                                    disabled={false}
+                                >
+                                    {'Next ->'}
+                                </button> :
+                                <button
+                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                    onClick={() => handleNext()}
+                                    disabled={true}
+                                >
+                                    {'Next ->'}
+                                </button>
+                        }
                     </div>
-                    <span className="ml-auto"></span>
-
-                    {
-                        page.previous != null ?
-                            <button
-                                className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2"
-                                onClick={() => handlePrev()}
-                                disabled={false}
-                            >
-                                {'<- Previous'}
-                            </button> :
-                            <button
-                                className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
-                                onClick={() => handlePrev()}
-                                disabled={true}
-                            >
-                                {'<- Previous'}
-                            </button>
-                    }
-                    {
-                        page.next != null ?
-                            <button
-                                className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
-                                onClick={() => handleNext()}
-                                disabled={false}
-                            >
-                                {'Next ->'}
-                            </button> :
-                            <button
-                                className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
-                                onClick={() => handleNext()}
-                                disabled={true}
-                            >
-                                {'Next ->'}
-                            </button>
-                    }
                 </div>
             </div>
-        </div>
+        </Widget>
     );
 };
 

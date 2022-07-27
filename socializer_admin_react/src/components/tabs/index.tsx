@@ -182,15 +182,13 @@ export const DefaultTabs: React.FC<TabsProps> = ({tabs}) => {
                     </div>
                 </div>
             </Widget>
-            <Widget>
-                {tabs.map((tab, key) => (
-                    <div
-                        key={key}
-                        className={`w-full ${openTab !== tab.index ? "hidden" : "block"}`}>
-                        {tab.content}
-                    </div>
-                ))}
-            </Widget>
+            {tabs.map((tab, key) => (
+                <div
+                    key={key}
+                    className={`w-full ${openTab !== tab.index ? "hidden" : "block"}`}>
+                    {tab.content}
+                </div>
+            ))}
         </>
 
 
