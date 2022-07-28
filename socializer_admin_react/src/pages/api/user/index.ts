@@ -12,6 +12,8 @@ export default withIronSessionApiRoute(userRoute, ironOptions);
 async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
     if (req.session.token) {
 
+        // console.log(req.session)
+
         // verify token
         const [decodedJWT, isExpired] = decodeJWT(req.session.token);
 

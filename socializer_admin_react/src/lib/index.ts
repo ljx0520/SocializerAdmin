@@ -1,16 +1,19 @@
 import jwt_decode from 'jwt-decode';
+
 const {format} = require('date-fns');
 
 export const BASE_URL = "http://0.0.0.0:8000";
 
-export const COOKIE_MAX_AGE = 24 * 60 * 60 * 1000
+export const COOKIE_MAX_AGE = 24 * 60 * 60 // ONE DAY
 
 export const ironOptions = {
     password: process.env.SESSION_PASSWORD as string,
     cookieName: process.env.SESSION_COOKIE_NAME as string,
+
+    ttl: COOKIE_MAX_AGE, // - 60 s
     // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
     cookieOptions: {
-        maxAge: COOKIE_MAX_AGE, // 1 day
+        // maxAge: COOKIE_MAX_AGE, // 1 day
         secure: process.env.NODE_ENV === "production",
     },
 }
@@ -72,10 +75,10 @@ export const defaultPage: IPage = {
     previous: null
 }
 
-export function formatDate(date: string) : string  {
-    if (date === '1-01-01 00:00:00') {
+export function formatDate(date: string): string {
+    if (date === '1-01-01 00:00:00 UTC') {
         return "NA"
     }
     var parsedDate = new Date(date);
-    return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a' )
+    return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a')
 }

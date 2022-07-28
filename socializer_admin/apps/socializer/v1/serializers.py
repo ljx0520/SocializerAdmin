@@ -169,7 +169,7 @@ class DisputeUpdateSerializer(serializers.ModelSerializer):
     dispute_resolved_at = serializers.DateTimeField(required=False, )
     dispute_resolved_by = serializers.CharField(required=False, allow_blank=True)
     notes = serializers.JSONField(read_only=True)
-    note = serializers.CharField(write_only=True, required=False, allow_blank=False)
+    note = serializers.CharField(write_only=True, required=False, allow_blank=True)
     dispute_processed_at = serializers.DateTimeField(required=False, )
     dispute_processed_by = serializers.CharField(required=False, allow_blank=True)
 

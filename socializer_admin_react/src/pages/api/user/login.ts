@@ -29,8 +29,6 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
         session.token = data.access;
         await session.save();
 
-
-
         res.status(200).json({
             code: 200,
             msg: "Login Success"
