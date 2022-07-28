@@ -2,7 +2,10 @@ import jwt_decode from 'jwt-decode';
 
 const {format} = require('date-fns');
 
+
 export const BASE_URL = "http://0.0.0.0:8000";
+
+export const IMAGE_ROOT = "https://d1aq6owl2qol3t.cloudfront.net/public";
 
 export const COOKIE_MAX_AGE = 24 * 60 * 60 // ONE DAY
 
@@ -81,4 +84,13 @@ export function formatDate(date: string): string {
     }
     var parsedDate = new Date(date);
     return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a')
+}
+
+
+export function getAge(date: string): string {
+    var parsedDate = new Date(date);
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var age = currentYear - parsedDate.getFullYear();
+    return age.toString();
 }

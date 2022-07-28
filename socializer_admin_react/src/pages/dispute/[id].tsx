@@ -2,22 +2,23 @@ import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import ReactTimeago from "react-timeago";
 import request from "../../service/fetch";
-import {formatDate, IPage} from "../../lib";
+import {formatDate, getAge, IMAGE_ROOT, IPage} from "../../lib";
 import {notify} from "../../utils/notify";
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import SectionTitle from "../../components/section-title";
-import {Dispute} from "../disputes";
 import {OptionProps, Select} from "components/react-hook-form/select";
 import Widget from "../../components/widget";
 import {Badge} from "../../components/badges";
 import Dropdown from "../../components/dropdowns";
-import {DefaultTabs} from "../../components/tabs";
+import {DefaultTabs, TabProps, TabsProps} from "../../components/tabs";
 import {FormProvider, useForm} from "react-hook-form";
 import {InputWrapper} from "components/react-hook-form/input-wrapper";
 import {Label} from "../../components/react-hook-form/label";
 import {ErrorMessage} from "../../components/react-hook-form/error-message";
 import {Textarea} from "../../components/react-hook-form/textarea";
 import {FiSend} from "react-icons/fi";
+import {Dispute, Offer, Order, UserProfile} from "../../lib/types";
+import ImageGallery from 'react-image-gallery';
 
 export type DisputeFormProps = {
     dispute_status: string;
@@ -26,12 +27,24 @@ export type DisputeFormProps = {
     note: string;
 };
 
-export interface Tab0Props {
+export interface TabDisputeProps {
     dispute: Dispute;
     onUpdate: Function
 }
 
-const Tab0 = ({dispute, onUpdate}: Tab0Props) => {
+export interface TabUserProfileProps {
+    userProfile: UserProfile;
+}
+
+export interface TabOfferProps {
+    offer: Offer;
+}
+
+export interface TabOrderProps {
+    order: Order;
+}
+
+const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
     const [currentStatus, setCurrentStatus] = useState(() => dispute.dispute_status)
     const [note, setNote] = useState(() => "")
 
@@ -311,8 +324,282 @@ const Tab0 = ({dispute, onUpdate}: Tab0Props) => {
     </>
 }
 
-const Tab1 = () => {
-    return <></>
+const TabUserProfile = ({userProfile}: TabUserProfileProps) => {
+
+    return <>
+        <Widget description={"Basic Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"User Id"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm">{userProfile.user_id}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Username | Nickname | Gender"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.username} | {userProfile.nickname} | {userProfile.gender.length == 0 ? "NA" : userProfile.gender[0] == "" ? "NA" : userProfile.gender[0]}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Living Area"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.living_suburb}, {userProfile.living_state}, {userProfile.living_country} {userProfile.living_postal_code} ({userProfile.living_lat}, {userProfile.living_long})
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Dob (Age)"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.dob}, (Age {getAge(userProfile.dob)})
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Verified"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.is_verified.toString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Pass Code"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.pass_code}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+
+        <Widget description={"Other Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Height"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.height == 0 ? "NA" : userProfile.height.toString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Smoking"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.smoking == "" ? "NA" : userProfile.smoking}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Drinking"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.drinking == "" ? "NA" : userProfile.drinking}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"About Me"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.about_me === "" ? "NA" : userProfile.about_me}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Education"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.education.length == 0 ? "NA" : userProfile.education[0] == "" ? "NA" : userProfile.education[0]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Ethnicity"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.ethnicity.length == 0 ? "NA" : userProfile.ethnicity[0] == "" ? "NA" : userProfile.ethnicity[0]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Interest"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.passion.length == 0 ? "NA" : userProfile.passion.join(", ")}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Language"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.language.length == 0 ? "NA" : userProfile.language.join(", ")}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.activity.length == 0 ? "NA" : userProfile.activity.join(", ")}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Vaccination Status"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.vaccination_status.length == 0 ? "NA" : userProfile.vaccination_status[0] == "" ? "NA" : userProfile.vaccination_status[0]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Relationship Status"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{userProfile.relationship_status.length == 0 ? "NA" : userProfile.relationship_status[0] == "" ? "NA" : userProfile.relationship_status[0]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+        <Widget description={"Profile Pictures"}>
+            <div className="w-3/5 content-center mx-auto">
+                <ImageGallery
+                    items={
+                        userProfile.image_url.map((element) => {
+                                return {
+                                    original: `${IMAGE_ROOT}/${element.original}`,
+                                    thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+                                }
+                            }
+                        )
+                    } showIndex={true} autoPlay={false} showPlayButton={false}
+                />
+            </div>
+
+        </Widget>
+    </>
+}
+
+const TabOffer = ({offer}: TabOfferProps) => {
+    return <>
+        <Widget>
+
+        </Widget>
+    </>
+}
+
+const TabOrder = ({order}: TabOrderProps) => {
+    return <>
+        <Widget>
+
+        </Widget>
+    </>
 }
 
 export default function Index() {
@@ -320,6 +607,8 @@ export default function Index() {
     const {id} = router.query;
     const [data, setData] = useState<Dispute | null>(() => null)
     const [currentStatus, setCurrentStatus] = useState<string | null>(() => null)
+
+    const [tabs, setTabs] = useState<TabProps[]>(() => []);
 
     const getDispute = () => {
         trackPromise(
@@ -331,6 +620,139 @@ export default function Index() {
                         // console.log(data)
                         setData(data);
                         setCurrentStatus(data.dispute_status);
+
+                        var tabsTemp: TabProps[] = [];
+                        tabsTemp = [
+                            ...tabsTemp,
+                            {
+                                index: 0,
+                                title: "Request Info",
+                                active: true,
+                                content: <TabDispute dispute={data} onUpdate={onUpdate}/>
+                            } as TabProps
+                        ];
+
+                        switch (data.dispute_object) {
+                            case "UserProfile":
+                                if (data.object_id != data.user_id) {
+                                    // other user
+                                    tabsTemp = [
+                                        ...tabsTemp,
+                                        {
+                                            index: 2,
+                                            title: "Dispute Object (User Profile)",
+                                            active: false,
+                                            content: <TabUserProfile userProfile={data.object}/>
+                                        } as TabProps
+                                    ];
+                                } else {
+                                    if (data.user_profile !== null) {
+                                        tabsTemp = [
+                                            ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps
+                                        ];
+                                    }
+                                }
+                                break;
+                            case "Offer":
+                                if (data.object !== null) {
+                                    if (data.object.payer_id !== data.user_id) {
+                                        tabsTemp = [
+                                            ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User (Payee)",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps,
+                                            {
+                                                index: 2,
+                                                title: "Payer",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.object.payer}/>
+                                            } as TabProps
+                                        ];
+                                    } else {
+                                        tabsTemp = [
+                                            ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User (Payer)",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps,
+                                            {
+                                                index: 2,
+                                                title: "Payee",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.object.payee}/>
+                                            } as TabProps
+                                        ];
+                                    }
+                                    tabsTemp = [
+                                        ...tabsTemp,
+                                        {
+                                            index: 3,
+                                            title: "Dispute Object (Offer)",
+                                            active: false,
+                                            content: <TabOffer offer={data.object}/>
+                                        } as TabProps
+                                    ];
+                                }
+                                break;
+                            case "Order":
+                                if (data.object !== null) {
+                                    if (data.object.payer_id !== data.user_id) {
+                                        tabsTemp = [
+                                            ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User (Payee)",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps,
+                                            {
+                                                index: 2,
+                                                title: "Payer",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.object.payer}/>
+                                            } as TabProps
+                                        ];
+                                    } else {
+                                        tabsTemp = [
+                                            ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User (Payer)",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps,
+                                            {
+                                                index: 2,
+                                                title: "Payee",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.object.payee}/>
+                                            } as TabProps
+                                        ];
+                                    }
+                                    tabsTemp = [
+                                        ...tabsTemp,
+                                        {
+                                            index: 3,
+                                            title: "Dispute Object (Order)",
+                                            active: false,
+                                            content: <TabOrder order={data.object}/>
+                                        } as TabProps
+                                    ];
+                                }
+                                break;
+                        }
+                        setTabs(tabsTemp);
                     } else {
                         notify(res.data.msg, "warn")
                     }
@@ -386,13 +808,7 @@ export default function Index() {
             <div className="flex flex-wrap">
                 <div className="w-full">
                     <DefaultTabs tabs={
-                        [{
-                            index: 0,
-                            title: "Request Info",
-                            active: true,
-                            content: <Tab0 dispute={data} onUpdate={onUpdate}/>
-                        },
-                            {index: 1, title: "User Profile", active: false, content: <Tab1/>},]
+                        tabs
                     }/>
                 </div>
             </div>

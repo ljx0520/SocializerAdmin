@@ -1,16 +1,16 @@
 import {useState} from "react";
 import Widget from "../widget";
 
-export type TabProps = {
+export interface TabProps {
     index: number;
     title: React.ReactNode;
     content: React.ReactNode;
     active?: boolean;
-};
+}
 
-export type TabsProps = {
+export interface TabsProps {
     tabs: TabProps[];
-};
+}
 
 export const VerticalTabs: React.FC<TabsProps> = ({tabs}) => {
     const [openTab, setOpenTab] = useState<number>(0);
@@ -164,7 +164,7 @@ export const DefaultTabs: React.FC<TabsProps> = ({tabs}) => {
                 <div className="flex flex-wrap w-full space-y-2">
                     <div className="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                         {tabs.map((tab, key) => (
-                            <div key={key} className="flex-none">
+                            <div key={key} className="flex-none mr-1">
                                 <button
                                     onClick={() => {
                                         setOpenTab(tab.index);

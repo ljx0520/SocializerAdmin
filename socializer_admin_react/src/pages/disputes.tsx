@@ -15,36 +15,7 @@ import {defaultPage, formatDate, IPage} from "../lib";
 import Link from "next/link";
 import Widget from "../components/widget";
 import ReactTimeago from "react-timeago";
-
-export interface Note {
-    note: string;
-    sent_at: string;
-    user_id: string;
-    nickname: string;
-    host_or_guest: string;
-}
-
-export interface Dispute {
-    id: string;
-    created_at: string;
-    updated_at: string;
-    deleted_at: number;
-    user_id: string;
-    dispute_object: string;
-    object_id: string;
-    dispute_type: string;
-    dispute_reason: string;
-    dispute_status: string;
-    dispute_result: string;
-    dispute_notes: string;
-    dispute_resolved_at: string;
-    dispute_resolved_by: string;
-    notes: Note[];
-    dispute_processed_at: string;
-    dispute_processed_by: string;
-    attachments: any[];
-}
-
+import {Dispute} from "../lib/types";
 
 const columnHelper = createColumnHelper<Dispute>()
 

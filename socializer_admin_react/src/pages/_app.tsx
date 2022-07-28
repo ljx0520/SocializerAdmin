@@ -5,6 +5,7 @@ import Layout from "layouts";
 import Router, {useRouter} from "next/router";
 import NProgress from "nprogress";
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-image-gallery/styles/css/image-gallery.css';
 import "css/tailwind.css";
 import "css/main.css";
 import "css/layouts/layout-1.css";
