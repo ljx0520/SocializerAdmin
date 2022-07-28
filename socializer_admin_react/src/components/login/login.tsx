@@ -9,6 +9,7 @@ import {toast, ToastContainer} from "react-toastify";
 import {notify} from "../../utils/notify";
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
+import md5 from "md5";
 
 export type FormProps = {
     username: string;
@@ -34,7 +35,7 @@ const Index: React.FC = () => {
             request
             .post('/api/user/login', {
                 username: data.username,
-                password: data.password
+                password: md5(data.password)
             })
             .then((res: any) => {
                 if (res.data.code === 200) {

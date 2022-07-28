@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: socializer-admin-app
+  namespace: socializer-admin
+  labels:
+    app: socializer-admin-app
+spec:
+  ports:
+    - port: 7070
+      name: socializer-admin-app
+      targetPort: 7070
+  selector:
+    app: socializer-admin-app

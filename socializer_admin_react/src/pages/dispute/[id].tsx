@@ -1372,159 +1372,161 @@ export default function Index() {
     const [tabs, setTabs] = useState<TabProps[]>(() => []);
 
     const getDispute = () => {
-        trackPromise(
-            request
-                .get(`/api/disputes/${id}`)
-                .then((res: any) => {
-                    if (res.data.code === 200) {
-                        var data = res.data.data;
-                        // console.log(data)
-                        setData(data);
-                        setCurrentStatus(data.dispute_status);
+        if (id !== undefined) {
+            trackPromise(
+                request
+                    .get(`/api/disputes/${id}`)
+                    .then((res: any) => {
+                        if (res.data.code === 200) {
+                            var data = res.data.data;
+                            // console.log(data)
+                            setData(data);
+                            setCurrentStatus(data.dispute_status);
 
-                        var tabsTemp: TabProps[] = [];
-                        tabsTemp = [
-                            ...tabsTemp,
-                            {
-                                index: 0,
-                                title: "Request Info",
-                                active: true,
-                                content: <TabDispute dispute={data} onUpdate={onUpdate}/>
-                            } as TabProps
-                        ];
+                            var tabsTemp: TabProps[] = [];
+                            tabsTemp = [
+                                ...tabsTemp,
+                                {
+                                    index: 0,
+                                    title: "Request Info",
+                                    active: true,
+                                    content: <TabDispute dispute={data} onUpdate={onUpdate}/>
+                                } as TabProps
+                            ];
 
-                        switch (data.dispute_object) {
-                            case "UserProfile":
-                                if (data.object_id != data.user_id) {
-                                    // other user
-                                    tabsTemp = [
-                                        ...tabsTemp,
-                                        {
-                                            index: 2,
-                                            title: "Dispute Object (User Profile)",
-                                            active: false,
-                                            content: <TabUserProfile userProfile={data.object}/>
-                                        } as TabProps
-                                    ];
-                                } else {
-                                    if (data.user_profile !== null) {
+                            switch (data.dispute_object) {
+                                case "UserProfile":
+                                    if (data.object_id != data.user_id) {
+                                        // other user
                                         tabsTemp = [
                                             ...tabsTemp,
-                                            {
-                                                index: 1,
-                                                title: "Request User",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.user_profile}/>
-                                            } as TabProps
-                                        ];
-                                    }
-                                }
-                                break;
-                            case "Offer":
-                                if (data.object !== null) {
-                                    if (data.object.payer_id !== data.user_id) {
-                                        tabsTemp = [
-                                            ...tabsTemp,
-                                            {
-                                                index: 1,
-                                                title: "Request User (Payee)",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.user_profile}/>
-                                            } as TabProps,
                                             {
                                                 index: 2,
-                                                title: "Payer",
+                                                title: "Dispute Object (User Profile)",
                                                 active: false,
-                                                content: <TabUserProfile userProfile={data.object.payer}/>
+                                                content: <TabUserProfile userProfile={data.object}/>
                                             } as TabProps
                                         ];
                                     } else {
+                                        if (data.user_profile !== null) {
+                                            tabsTemp = [
+                                                ...tabsTemp,
+                                                {
+                                                    index: 1,
+                                                    title: "Request User",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.user_profile}/>
+                                                } as TabProps
+                                            ];
+                                        }
+                                    }
+                                    break;
+                                case "Offer":
+                                    if (data.object !== null) {
+                                        if (data.object.payer_id !== data.user_id) {
+                                            tabsTemp = [
+                                                ...tabsTemp,
+                                                {
+                                                    index: 1,
+                                                    title: "Request User (Payee)",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.user_profile}/>
+                                                } as TabProps,
+                                                {
+                                                    index: 2,
+                                                    title: "Payer",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.object.payer}/>
+                                                } as TabProps
+                                            ];
+                                        } else {
+                                            tabsTemp = [
+                                                ...tabsTemp,
+                                                {
+                                                    index: 1,
+                                                    title: "Request User (Payer)",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.user_profile}/>
+                                                } as TabProps,
+                                                {
+                                                    index: 2,
+                                                    title: "Payee",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.object.payee}/>
+                                                } as TabProps
+                                            ];
+                                        }
                                         tabsTemp = [
                                             ...tabsTemp,
                                             {
-                                                index: 1,
-                                                title: "Request User (Payer)",
+                                                index: 3,
+                                                title: "Dispute Object (Offer)",
                                                 active: false,
-                                                content: <TabUserProfile userProfile={data.user_profile}/>
-                                            } as TabProps,
-                                            {
-                                                index: 2,
-                                                title: "Payee",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.object.payee}/>
+                                                content: <TabOffer offer={data.object}/>
                                             } as TabProps
                                         ];
                                     }
-                                    tabsTemp = [
-                                        ...tabsTemp,
-                                        {
-                                            index: 3,
-                                            title: "Dispute Object (Offer)",
-                                            active: false,
-                                            content: <TabOffer offer={data.object}/>
-                                        } as TabProps
-                                    ];
-                                }
-                                break;
-                            case "Order":
-                                if (data.object !== null) {
-                                    if (data.object.payer_id !== data.user_id) {
+                                    break;
+                                case "Order":
+                                    if (data.object !== null) {
+                                        if (data.object.payer_id !== data.user_id) {
+                                            tabsTemp = [
+                                                ...tabsTemp,
+                                                {
+                                                    index: 1,
+                                                    title: "Request User (Payee)",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.user_profile}/>
+                                                } as TabProps,
+                                                {
+                                                    index: 2,
+                                                    title: "Payer",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.object.payer}/>
+                                                } as TabProps
+                                            ];
+                                        } else {
+                                            tabsTemp = [
+                                                ...tabsTemp,
+                                                {
+                                                    index: 1,
+                                                    title: "Request User (Payer)",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.user_profile}/>
+                                                } as TabProps,
+                                                {
+                                                    index: 2,
+                                                    title: "Payee",
+                                                    active: false,
+                                                    content: <TabUserProfile userProfile={data.object.payee}/>
+                                                } as TabProps
+                                            ];
+                                        }
                                         tabsTemp = [
                                             ...tabsTemp,
                                             {
-                                                index: 1,
-                                                title: "Request User (Payee)",
+                                                index: 3,
+                                                title: "Dispute Object (Order)",
                                                 active: false,
-                                                content: <TabUserProfile userProfile={data.user_profile}/>
-                                            } as TabProps,
-                                            {
-                                                index: 2,
-                                                title: "Payer",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.object.payer}/>
-                                            } as TabProps
-                                        ];
-                                    } else {
-                                        tabsTemp = [
-                                            ...tabsTemp,
-                                            {
-                                                index: 1,
-                                                title: "Request User (Payer)",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.user_profile}/>
-                                            } as TabProps,
-                                            {
-                                                index: 2,
-                                                title: "Payee",
-                                                active: false,
-                                                content: <TabUserProfile userProfile={data.object.payee}/>
+                                                content: <TabOrder order={data.object}/>
                                             } as TabProps
                                         ];
                                     }
-                                    tabsTemp = [
-                                        ...tabsTemp,
-                                        {
-                                            index: 3,
-                                            title: "Dispute Object (Order)",
-                                            active: false,
-                                            content: <TabOrder order={data.object}/>
-                                        } as TabProps
-                                    ];
-                                }
-                                break;
+                                    break;
+                            }
+                            setTabs(tabsTemp);
+                        } else {
+                            notify(res.data.msg, "warn")
                         }
-                        setTabs(tabsTemp);
-                    } else {
-                        notify(res.data.msg, "warn")
-                    }
-                }));
+                    }));
+        }
     }
 
     useEffect(() => {
-        return () => {
+        if (router.isReady) {
             getDispute();
         }
-    }, [])
+    }, [router.isReady])
 
 
     const onUpdate = async (formProps: DisputeFormProps) => {

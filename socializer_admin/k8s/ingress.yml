@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: socializer-admin-app-ingress
+  namespace: socializer-admin
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - secretName: muslimlife-com-au
+      hosts:
+        - api.muslimlife.com.au
+  rules:
+    - host: api.muslimlife.com.au
+      http:
+        paths:
+          - path: /socializer/admin/
+            pathType: Prefix
+            backend:
+              service:
+                name: socializer-admin-app
+                port:
+                  number: 7070

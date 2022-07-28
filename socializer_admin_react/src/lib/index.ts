@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode';
 const {format} = require('date-fns');
 
 
-export const BASE_URL = "http://0.0.0.0:8000";
+export const BASE_URL = "https://api.muslimlife.com.au/socializer/admin";
 
 export const IMAGE_ROOT = "https://d1aq6owl2qol3t.cloudfront.net/public";
 

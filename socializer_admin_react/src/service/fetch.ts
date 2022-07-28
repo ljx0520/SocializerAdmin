@@ -3,6 +3,7 @@ import {consoleLog} from "utils";
 
 const requestInstance = axios.create({
     baseURL: '/',
+    timeout: 10000
 });
 
 requestInstance.interceptors.request.use(
