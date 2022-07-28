@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import ReactTimeago from "react-timeago";
 import request from "../../service/fetch";
-import {formatDate, getAge, IMAGE_ROOT, IPage} from "../../lib";
+import {formatCurrency, formatDate, formatNumber, getAge, IMAGE_ROOT, IPage} from "../../lib";
 import {notify} from "../../utils/notify";
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import SectionTitle from "../../components/section-title";
@@ -216,6 +216,25 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
                 </div> : null
             }
         </Widget>
+        <Widget description={"Attachments"}>
+            {
+                dispute.attachments.length > 0 ? <div className="w-3/5 content-center mx-auto">
+                    <ImageGallery
+                        items={
+                            dispute.attachments.map((element) => {
+                                    return {
+                                        original: `${IMAGE_ROOT}/${element.original}`,
+                                        thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+                                    }
+                                }
+                            )
+                        } showIndex={true} autoPlay={false} showPlayButton={false}
+                    />
+                </div> : <div
+                    className="text-sm">There is no attachements
+                </div>
+            }
+        </Widget>
         <Widget description={"Notes"}>
             {
                 dispute.notes.length == 0 ?
@@ -376,7 +395,7 @@ const TabUserProfile = ({userProfile}: TabUserProfileProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{userProfile.dob}, (Age {getAge(userProfile.dob)})
+                            className="text-sm">{formatDate(userProfile.dob)}, (Age {getAge(userProfile.dob)})
                         </div>
                     </div>
                 </div>
@@ -568,19 +587,23 @@ const TabUserProfile = ({userProfile}: TabUserProfileProps) => {
             </div>
         </Widget>
         <Widget description={"Profile Pictures"}>
-            <div className="w-3/5 content-center mx-auto">
-                <ImageGallery
-                    items={
-                        userProfile.image_url.map((element) => {
-                                return {
-                                    original: `${IMAGE_ROOT}/${element.original}`,
-                                    thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+            {
+                userProfile.image_url.length > 0 ? <div className="w-3/5 content-center mx-auto">
+                    <ImageGallery
+                        items={
+                            userProfile.image_url.map((element) => {
+                                    return {
+                                        original: `${IMAGE_ROOT}/${element.original}`,
+                                        thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+                                    }
                                 }
-                            }
-                        )
-                    } showIndex={true} autoPlay={false} showPlayButton={false}
-                />
-            </div>
+                            )
+                        } showIndex={true} autoPlay={false} showPlayButton={false}
+                    />
+                </div> : <div
+                    className="text-sm">There is no pictures
+                </div>
+            }
 
         </Widget>
     </>
@@ -588,16 +611,754 @@ const TabUserProfile = ({userProfile}: TabUserProfileProps) => {
 
 const TabOffer = ({offer}: TabOfferProps) => {
     return <>
-        <Widget>
+        <Widget description={"Basic Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Offer Id"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm">{offer.id}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Created At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(offer.created_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Last Updated At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(offer.updated_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Offer Status"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{offer.offer_status}</div>
+                    </div>
+                </div>
+            </div>
 
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Duration (in hour)"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatNumber(offer.total_duration_hour)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Price per Hour"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(offer.price_per_hour)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Total Price"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(offer.total_price)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+        <Widget description={"Other Info"}>
+
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Category"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{offer.activity_category} | {offer.activity_sub_category}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Title"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{offer.title}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Description"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{offer.description}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Offer Meeting Location"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{offer.meeting_address}, {offer.meeting_suburb}, {offer.meeting_state}, {offer.meeting_country} {offer.meeting_postal_code} ({offer.meeting_lat}, {offer.meeting_long})
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Meeting From"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(offer.from_datetime)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Meeting To"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(offer.to_datetime)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+        <Widget description={"Notes"}>
+            {
+                offer.notes.length == 0 ?
+                    <div className="text-sm">There isn't any notes</div>
+                    :
+                    offer.notes.map((note, index) =>
+                        <div className="flex flex-col lg:flex-row mb-3" key={index}>
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm font-bold">{note.host_or_guest == "Guest" ? "Guest" : "Host"}</div>
+                                <div className="text-sm">{note.note}</div>
+                            </div>
+                            <div className="shrink-0">
+                                <div className="text-gray-500 lg:ml-1">{formatDate(note.sent_at)} (<ReactTimeago
+                                    date={note.sent_at}/>)
+                                </div>
+                            </div>
+                        </div>
+                    )
+            }
+        </Widget>
+        <Widget description={"Activity Pictures"}>
+            {
+                offer.image_url.length > 0 ? <div className="w-3/5 content-center mx-auto"><ImageGallery
+                        items={
+                            offer.image_url.map((element) => {
+                                    return {
+                                        original: `${IMAGE_ROOT}/${element.original}`,
+                                        thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+                                    }
+                                }
+                            )
+                        } showIndex={true} autoPlay={false} showPlayButton={false}
+                    /></div>
+                    : <div
+                        className="text-sm">There is no pictures
+                    </div>
+            }
         </Widget>
     </>
 }
 
 const TabOrder = ({order}: TabOrderProps) => {
     return <>
-        <Widget>
-
+        <Widget description={"Basic Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Order Id"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm">{order.id}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Created At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.created_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Last Updated At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.updated_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Order Status"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.order_status}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Duration (in hour)"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatNumber(order.total_duration_hour)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Price per Hour"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(order.price_per_hour)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Total Price"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(order.total_price)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+        <Widget description={"Other Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Category"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.activity_category} | {order.activity_sub_category}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Title"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.title}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Activity Description"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.description}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Offer Meeting Location"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.meeting_address}, {order.meeting_suburb}, {order.meeting_state}, {order.meeting_country} {order.meeting_postal_code} ({order.meeting_lat}, {order.meeting_long})
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Meeting From"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.from_datetime)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Meeting To"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.to_datetime)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Widget>
+        <Widget description={"Transaction Info"}>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Paid Amount"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.payment_type == "Stripe" ? formatCurrency(order.paid_amount) : formatCurrency(order.paid_credit_amount)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {
+                order.payment_type == "Stripe" ? <div className="flex flex-wrap mb-3">
+                    <div className="w-full lg:w-1/2">
+                        <div className="flex flex-col w-full">
+                            <div className="text-sm font-bold">{"Stripe Fee"}</div>
+                        </div>
+                    </div>
+                    <div className="w-full lg:w-1/2">
+                        <div className="flex flex-col w-full">
+                            <div
+                                className="text-sm">{formatCurrency(order.paid_processing_fee)}
+                            </div>
+                        </div>
+                    </div>
+                </div> : <></>
+            }
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Paid At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.payment_type == "Stripe" ? formatDate(order.paid_at) : formatDate(order.paid_credit_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Payment Type"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.payment_type} | {order.payment_type == "Stripe" ? order.payment_id : order.credit_payment_id}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Is Refunded"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.is_refunded.toString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Refund Amount"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(order.refund_amount)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Refund At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.refund_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Is Paid Out"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.is_paid_out.toString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Payout Amount"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(order.payout_amount)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Payout At"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatDate(order.payout_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Service Fee"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{formatCurrency(order.fee_amount)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap mb-3">
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div className="text-sm font-bold">{"Is Meeting Extended"}</div>
+                    </div>
+                </div>
+                <div className="w-full lg:w-1/2">
+                    <div className="flex flex-col w-full">
+                        <div
+                            className="text-sm">{order.is_extended.toString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {
+                order.is_extended ? <>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extended Status"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{formatCurrency(order.extend_status)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extended Price per Hour"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{formatCurrency(order.extended_price_per_hour)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extended Total Price"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{formatCurrency(order.extended_total_price)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extended Duration"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{formatNumber(order.extended_duration_hour)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extended To"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{formatDate(order.extended_datetime)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Extend Paid Amount"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{order.extended_payment_type == "Stripe" ? formatCurrency(order.extended_paid_amount) : formatCurrency(order.extended_paid_credit_amount)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {
+                        order.extended_payment_type == "Stripe" ? <div className="flex flex-wrap mb-3">
+                            <div className="w-full lg:w-1/2">
+                                <div className="flex flex-col w-full">
+                                    <div className="text-sm font-bold">{"Stripe Fee"}</div>
+                                </div>
+                            </div>
+                            <div className="w-full lg:w-1/2">
+                                <div className="flex flex-col w-full">
+                                    <div
+                                        className="text-sm">{formatCurrency(order.extended_paid_processing_fee)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> : <></>
+                    }
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Paid At"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{order.extended_payment_type == "Stripe" ? formatDate(order.extended_paid_at) : formatDate(order.extended_paid_credit_at)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-3">
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div className="text-sm font-bold">{"Payment Type"}</div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm">{order.extended_payment_type} | {order.extended_payment_type == "Stripe" ? order.extended_payment_id : order.extended_credit_payment_id}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </> : <></>
+            }
+        </Widget>
+        <Widget description={"Notes"}>
+            {
+                order.notes.length == 0 ?
+                    <div className="text-sm">There isn't any notes</div>
+                    :
+                    order.notes.map((note, index) =>
+                        <div className="flex flex-col lg:flex-row mb-3" key={index}>
+                            <div className="flex flex-col w-full">
+                                <div
+                                    className="text-sm font-bold">{note.host_or_guest == "Guest" ? "Guest" : "Host"}</div>
+                                <div className="text-sm">{note.note}</div>
+                            </div>
+                            <div className="shrink-0">
+                                <div className="text-gray-500 lg:ml-1">{formatDate(note.sent_at)} (<ReactTimeago
+                                    date={note.sent_at}/>)
+                                </div>
+                            </div>
+                        </div>
+                    )
+            }
+        </Widget>
+        <Widget description={"Activity Pictures"}>
+            {
+                order.image_url.length > 0 ? <div className="w-3/5 content-center mx-auto"><ImageGallery
+                        items={
+                            order.image_url.map((element) => {
+                                    return {
+                                        original: `${IMAGE_ROOT}/${element.original}`,
+                                        thumbnail: `${IMAGE_ROOT}/${element.thumbnail}`,
+                                    }
+                                }
+                            )
+                        } showIndex={true} autoPlay={false} showPlayButton={false}
+                    /></div>
+                    : <div
+                        className="text-sm">There is no pictures
+                    </div>
+            }
         </Widget>
     </>
 }

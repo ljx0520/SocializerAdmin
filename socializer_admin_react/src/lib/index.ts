@@ -82,8 +82,13 @@ export function formatDate(date: string): string {
     if (date === '1-01-01 00:00:00 UTC') {
         return "NA"
     }
-    var parsedDate = new Date(date);
-    return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a')
+    try {
+        var parsedDate = new Date(date);
+        return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a')
+    } catch (e) {
+        return `Date Format Error ${date}`
+    }
+
 }
 
 
@@ -93,4 +98,25 @@ export function getAge(date: string): string {
     var currentYear = currentDate.getFullYear();
     var age = currentYear - parsedDate.getFullYear();
     return age.toString();
+}
+
+
+export function formatCurrency(money: string): string {
+    try {
+        var parsedMoney = parseFloat(money);
+        return `\$${parsedMoney.toFixed(2)}`
+    } catch (e) {
+        return `Currency Format Error ${money}`
+    }
+
+}
+
+export function formatNumber(num: string): string {
+    try {
+        var parsedNum = parseFloat(num);
+        return `${parsedNum.toFixed(2)}`
+    } catch (e) {
+        return `Number Format Error ${num}`
+    }
+
 }
