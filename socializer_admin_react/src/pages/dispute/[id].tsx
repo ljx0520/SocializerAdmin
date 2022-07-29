@@ -94,13 +94,13 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
     }
 
     useEffect(() => {
-        console.log('current status ', currentStatus)
+        // console.log('current status ', currentStatus)
         if (currentStatus !== "Resolved") {
-            console.log("unregister");
+            // console.log("unregister");
             register("dispute_result", {required: false});
             register("dispute_notes", {required: false});
         } else {
-            console.log("register");
+            // console.log("register");
             register("dispute_result", {required: "This is required"});
             register("dispute_notes", {required: "This is required"});
         }
@@ -108,7 +108,7 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
 
     const onSubmit = async (formProps: DisputeFormProps) => {
         //eslint-disable-next-line
-        console.log(JSON.stringify(formProps, null, 2));
+        // console.log(JSON.stringify(formProps, null, 2));
 
         await onUpdate({
             dispute_status: formProps.dispute_status,
@@ -119,9 +119,9 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
 
     const onSendNote = async () => {
         // e.preventDefault();
-        console.log(note);
+        // console.log(note);
         if (note != "") {
-            console.log(onUpdate)
+            // console.log(onUpdate)
             await onUpdate({
                 dispute_status: dispute.dispute_status,
                 dispute_notes: dispute.dispute_notes,

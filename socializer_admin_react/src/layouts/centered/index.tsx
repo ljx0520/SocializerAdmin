@@ -1,5 +1,4 @@
 import {ToastContainer} from "react-toastify";
-import {PulseLoader} from "react-spinners";
 
 export type CenteredProps = {
     children: React.ReactNode;

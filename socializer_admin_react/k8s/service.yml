@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: params-test-express
+  namespace: params
+  labels:
+    app: params-test-express
+spec:
+  ports:
+    - port: 9000
+      targetPort: 9000
+  selector:
+    app: params-test-express

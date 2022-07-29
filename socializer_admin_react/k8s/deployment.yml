@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: params
+  name: params-test-express
+spec:
+  selector:
+    matchLabels:
+      app: params-test-express
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: params-test-express
+    spec:
+      containers:
+        - name: params-test-express
+          image: registry.digitalocean.com/params/params_test_express:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+      imagePullSecrets:
+        - name: registry-params

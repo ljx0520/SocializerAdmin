@@ -79,7 +79,7 @@ export const defaultPage: IPage = {
 }
 
 export function formatDate(date: string): string {
-    if (date === '1-01-01 00:00:00 UTC') {
+    if (date === '0001-01-01 00:00:00 UTC') {
         return "NA"
     }
     try {
