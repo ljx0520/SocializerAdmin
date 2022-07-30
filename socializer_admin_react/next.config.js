@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    experimental: {
+        outputStandalone: true,
+    },
     output: 'standalone',
     eslint: {
         // Warning: This allows production builds to successfully complete even if
