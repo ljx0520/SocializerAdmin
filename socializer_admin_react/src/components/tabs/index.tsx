@@ -1,5 +1,6 @@
+import React from "react";
 import {useState} from "react";
-import Widget from "../widget";
+import Widget from "components/widget";
 
 export interface TabProps {
     index: number;

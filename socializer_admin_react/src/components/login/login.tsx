@@ -1,12 +1,11 @@
+import React from "react";
 import {useForm, FormProvider} from "react-hook-form";
 import {InputWrapper} from "components/react-hook-form/input-wrapper";
 import {Label} from "components/react-hook-form/label";
 import {ErrorMessage} from "components/react-hook-form/error-message";
 import {Input} from "components/react-hook-form/input";
-import {consoleLog} from "utils";
 import request from 'service/fetch';
-import {toast, ToastContainer} from "react-toastify";
-import {notify} from "../../utils/notify";
+import {notify} from "lib/notify";
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import md5 from "md5";

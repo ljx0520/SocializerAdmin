@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {consoleLog} from "utils";
 
 const requestInstance = axios.create({
     baseURL: '/',

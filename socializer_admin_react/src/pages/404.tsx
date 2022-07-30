@@ -1,10 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 
 const ErrorPage: React.FC = () => {
     return (
         <div className="flex flex-col w-full max-w-xl text-center">
-            <img
+            <Image
                 className="object-contain w-auto h-64 mb-8"
                 src="/images/illustration.svg"
                 alt="svg"
@@ -12,8 +13,7 @@ const ErrorPage: React.FC = () => {
             <h1 className="text-6xl text-blue-500 mb-4">404</h1>
 
             <div className="mb-8 text-center text-gray-900 dark:text-white">
-                We're sorry. The page you requested could not be found. Please go back
-                to the homepage or contact us
+                {"We're sorry. The page you requested could not be found. Please go back to the homepage or contact us"}
             </div>
             <div className="flex w-full">
                 <Link href="/">

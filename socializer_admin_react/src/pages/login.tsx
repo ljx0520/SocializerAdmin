@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Layout from "layouts/centered";
 import CenteredForm from "layouts/centered-form";
 import Login from "components/login/login";
+import React from "react";
 
 const Index: React.FC = () => {
     return (

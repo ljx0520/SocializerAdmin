@@ -1,8 +1,8 @@
+import React from "react";
 import {Fragment} from "react";
 import Title from "components/left-sidebar-1/title";
 import Item from "components/left-sidebar-1/item";
 import Logo from "components/left-sidebar-1/logo";
-import {useAppSelector} from "redux/hooks";
 import {navigations} from "lib/navigations";
 
 const LeftSidebar: React.FC = () => {

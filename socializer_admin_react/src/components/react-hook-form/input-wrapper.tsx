@@ -1,3 +1,4 @@
+import React from "react";
 export type InputWrapperProps = {
   outerClassName: string;
   inline?: boolean;

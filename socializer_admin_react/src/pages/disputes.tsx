@@ -1,21 +1,18 @@
+import React from "react";
 import SectionTitle from "components/section-title";
 import {
     DefaultTabs,
-    UnderlinedTabs,
-    IconTabs,
-    Pills,
-    VerticalTabs,
 } from "components/tabs";
 import {useReactTable, getCoreRowModel, createColumnHelper, flexRender, Table} from "@tanstack/react-table";
-import {MouseEventHandler, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {trackPromise} from "react-promise-tracker";
-import request from "../service/fetch";
-import {notify} from "../utils/notify";
-import {defaultPage, formatDate, IPage} from "../lib";
+import request from "service/fetch";
+import {defaultPage, formatDate, IPage} from "lib";
 import Link from "next/link";
-import Widget from "../components/widget";
+import Widget from "components/widget";
 import ReactTimeago from "react-timeago";
-import {Dispute} from "../lib/types";
+import {Dispute} from "lib/types";
+import {notify} from "lib/notify";
 
 const columnHelper = createColumnHelper<Dispute>()
 

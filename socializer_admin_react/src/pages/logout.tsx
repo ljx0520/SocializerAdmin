@@ -1,11 +1,11 @@
-import Link from "next/link";
+
 import Layout from "layouts/centered";
 import CenteredForm from "layouts/centered-form";
 import Login from "components/login/login";
-import {useEffect} from "react";
-import request from "../service/fetch";
-import {notify} from "../utils/notify";
+import React, {useEffect} from "react";
+import request from "service/fetch";
 import {useRouter} from "next/router";
+import {notify} from "lib/notify";
 
 const Index: React.FC = () => {
 

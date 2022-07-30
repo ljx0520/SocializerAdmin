@@ -1,4 +1,4 @@
-import {FiActivity, FiUsers, FiExternalLink, FiClock} from "react-icons/fi";
+import React from "react";
 
 const Index: React.FC = () => {
     return (

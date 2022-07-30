@@ -1,11 +1,12 @@
-import {FiSettings, FiMenu} from "react-icons/fi";
+import React from "react";
+import {FiMenu} from "react-icons/fi";
 import {useAppDispatch, useAppSelector} from "redux/hooks";
 import {setConfig} from "redux/config/config";
 import ProfileDropdown from "components/navbar-1/account-dropdown";
 
 const Navbar: React.FC = () => {
     const config = useAppSelector((state) => state.config);
-    const {rightSidebar, collapsed} = config;
+    const {collapsed} = config;
     const dispatch = useAppDispatch();
     return (
         <div

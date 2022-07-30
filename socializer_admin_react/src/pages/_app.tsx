@@ -1,8 +1,7 @@
-import type {AppProps} from "next/app";
 import Head from "next/head";
 import {Provider} from "react-redux";
 import Layout from "layouts";
-import Router, {useRouter} from "next/router";
+import Router from "next/router";
 import NProgress from "nprogress";
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-image-gallery/styles/css/image-gallery.css';

@@ -1,3 +1,5 @@
+import React from "react";
+
 export type WidgetProps = {
   title?: React.ReactNode;
   description?: React.ReactNode;

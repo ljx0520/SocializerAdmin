@@ -7,7 +7,7 @@ export const BASE_URL = "https://api.muslimlife.com.au/socializer/admin";
 
 export const IMAGE_ROOT = "https://d1aq6owl2qol3t.cloudfront.net/public";
 
-export const COOKIE_MAX_AGE = 24 * 60 * 60 // ONE DAY
+export const COOKIE_MAX_AGE = 24 * 60 * 60 // one day
 
 export const ironOptions = {
     password: process.env.SESSION_PASSWORD as string,
@@ -23,6 +23,7 @@ export const ironOptions = {
 
 // This is where we specify the typings of req.session.*
 declare module "iron-session" {
+    /*eslint-disable */
     interface IronSessionData {
         token?: string;
     }
@@ -104,7 +105,7 @@ export function getAge(date: string): string {
 export function formatCurrency(money: string): string {
     try {
         var parsedMoney = parseFloat(money);
-        return `\$${parsedMoney.toFixed(2)}`
+        return `$${parsedMoney.toFixed(2)}`
     } catch (e) {
         return `Currency Format Error ${money}`
     }
@@ -119,4 +120,11 @@ export function formatNumber(num: string): string {
         return `Number Format Error ${num}`
     }
 
+}
+
+
+export const consoleLog = (message?: any, ...optionalParams: any[]) => {
+    if (process.env.NODE_ENV !== "production") {
+        console.log(message, ...optionalParams);
+    }
 }

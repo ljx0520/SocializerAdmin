@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import {Menu, Transition} from "@headlessui/react";
-import {Fragment} from "react";
+import React, {Fragment} from "react";
 import {ChevronDownIcon} from "@heroicons/react/solid";
+
 
 export type Placement = "right" | "left";
 

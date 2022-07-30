@@ -1,5 +1,6 @@
+import React from "react";
 import Link from "next/link";
-import {FiMail, FiStar, FiUser, FiLogIn} from "react-icons/fi";
+import {FiUser, FiLogIn} from "react-icons/fi";
 
 export type ItemProps = {
     url: string;

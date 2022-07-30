@@ -1,23 +1,22 @@
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import ReactTimeago from "react-timeago";
-import request from "../../service/fetch";
-import {formatCurrency, formatDate, formatNumber, getAge, IMAGE_ROOT, IPage} from "../../lib";
-import {notify} from "../../utils/notify";
-import {ChangeEvent, FormEvent, useEffect, useState} from "react";
-import SectionTitle from "../../components/section-title";
+import request from "service/fetch";
+import {formatCurrency, formatDate, formatNumber, getAge, IMAGE_ROOT} from "lib";
+import {notify} from "lib/notify";
+import {ChangeEvent, useEffect, useState} from "react";
+import SectionTitle from "components/section-title";
 import {OptionProps, Select} from "components/react-hook-form/select";
-import Widget from "../../components/widget";
-import {Badge} from "../../components/badges";
-import Dropdown from "../../components/dropdowns";
-import {DefaultTabs, TabProps, TabsProps} from "../../components/tabs";
+import Widget from "components/widget";
+import {Badge} from "components/badges";
+import {DefaultTabs, TabProps} from "components/tabs";
 import {FormProvider, useForm} from "react-hook-form";
 import {InputWrapper} from "components/react-hook-form/input-wrapper";
-import {Label} from "../../components/react-hook-form/label";
-import {ErrorMessage} from "../../components/react-hook-form/error-message";
-import {Textarea} from "../../components/react-hook-form/textarea";
+import {Label} from "components/react-hook-form/label";
+import {ErrorMessage} from "components/react-hook-form/error-message";
+import {Textarea} from "components/react-hook-form/textarea";
 import {FiSend} from "react-icons/fi";
-import {Dispute, Offer, Order, UserProfile} from "../../lib/types";
+import {Dispute, Offer, Order, UserProfile} from "lib/types";
 import ImageGallery from 'react-image-gallery';
 
 export type DisputeFormProps = {
@@ -61,9 +60,9 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
         handleSubmit,
         reset,
         formState: {errors},
-        getValues,
+        // getValues,
         register,
-        unregister
+        // unregister
     } = methods;
 
     const onStatusChange = (e: ChangeEvent) => {
@@ -238,7 +237,7 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
         <Widget description={"Notes"}>
             {
                 dispute.notes.length == 0 ?
-                    <div className="text-sm">There isn't any notes</div>
+                    <div className="text-sm">{"There isn't any notes"}</div>
                     :
                     dispute.notes.map((note, index) =>
                         <div className="flex flex-col lg:flex-row mb-3" key={index}>
@@ -796,7 +795,7 @@ const TabOffer = ({offer}: TabOfferProps) => {
         <Widget description={"Notes"}>
             {
                 offer.notes.length == 0 ?
-                    <div className="text-sm">There isn't any notes</div>
+                    <div className="text-sm">{"There isn't any notes"}</div>
                     :
                     offer.notes.map((note, index) =>
                         <div className="flex flex-col lg:flex-row mb-3" key={index}>
@@ -1324,7 +1323,7 @@ const TabOrder = ({order}: TabOrderProps) => {
         <Widget description={"Notes"}>
             {
                 order.notes.length == 0 ?
-                    <div className="text-sm">There isn't any notes</div>
+                    <div className="text-sm">{"There isn't any notes"}</div>
                     :
                     order.notes.map((note, index) =>
                         <div className="flex flex-col lg:flex-row mb-3" key={index}>

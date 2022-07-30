@@ -1,3 +1,5 @@
+import React from "react";
+
 export type SectionTitleProps = {
   title: React.ReactNode;
   subtitle: React.ReactNode;

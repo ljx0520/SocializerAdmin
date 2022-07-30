@@ -1,3 +1,6 @@
+import React from "react";
+
+
 export type ItemProps = {
   title: string;
   img: string;

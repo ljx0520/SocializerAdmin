@@ -1,7 +1,8 @@
-import {FiBox, FiMenu} from "react-icons/fi";
+import React from "react";
+import {FiMenu} from "react-icons/fi";
 import Link from "next/link";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {setConfig} from "../../redux/config/config";
+import {useAppDispatch, useAppSelector} from "redux/hooks";
+import {setConfig} from "redux/config/config";
 import Image from "next/image";
 import appLogo from "assets/app_icon.png";
 

@@ -1,3 +1,4 @@
+import React from "react";
 export type ErrorMessageProps = {
   inline?: boolean;
   children: React.ReactNode;
