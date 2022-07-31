@@ -108,53 +108,61 @@ const Tab = (props: ITabProps) => {
                 </table>
 
                 <div className="mt-3">
-                    <div className="flex items-center justify-start w-full">
-                        <div className="flex ml-2">
-                            Showing
-                            <div className="font-semibold ml-1 mr-1">{`${page.from}`}</div>
-                            to
-                            <div className="font-semibold ml-1 mr-1">{`${page.to}`}</div>
-                            of
-                            <div className="font-semibold ml-1 mr-1">{`${page.count}`}</div>
-                            results
-                        </div>
-                        <span className="ml-auto"></span>
+                    {
+                        page.count == 0 ? <>
+                                <div
+                                    className="flex items-center justify-center font-w400 px-auto pt-3 pb-3">{"This table is empty"}</div>
+                            </>
+                            :
+                            <div className="flex items-center justify-start w-full">
+                                <div className="flex ml-2">
+                                    Showing
+                                    <div className="font-semibold ml-1 mr-1">{`${page.from}`}</div>
+                                    to
+                                    <div className="font-semibold ml-1 mr-1">{`${page.to}`}</div>
+                                    of
+                                    <div className="font-semibold ml-1 mr-1">{`${page.count}`}</div>
+                                    results
+                                </div>
+                                <span className="ml-auto"></span>
 
-                        {
-                            page.previous != null ?
-                                <button
-                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2 ml-2"
-                                    onClick={() => handlePrev()}
-                                    disabled={false}
-                                >
-                                    {'<- Previous'}
-                                </button> :
-                                <button
-                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2 ml-2"
-                                    onClick={() => handlePrev()}
-                                    disabled={true}
-                                >
-                                    {'<- Previous'}
-                                </button>
-                        }
-                        {
-                            page.next != null ?
-                                <button
-                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
-                                    onClick={() => handleNext()}
-                                    disabled={false}
-                                >
-                                    {'Next ->'}
-                                </button> :
-                                <button
-                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
-                                    onClick={() => handleNext()}
-                                    disabled={true}
-                                >
-                                    {'Next ->'}
-                                </button>
-                        }
-                    </div>
+                                {
+                                    page.previous != null ?
+                                        <button
+                                            className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2 ml-2"
+                                            onClick={() => handlePrev()}
+                                            disabled={false}
+                                        >
+                                            {'<- Previous'}
+                                        </button> :
+                                        <button
+                                            className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2 ml-2"
+                                            onClick={() => handlePrev()}
+                                            disabled={true}
+                                        >
+                                            {'<- Previous'}
+                                        </button>
+                                }
+                                {
+                                    page.next != null ?
+                                        <button
+                                            className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                                            onClick={() => handleNext()}
+                                            disabled={false}
+                                        >
+                                            {'Next ->'}
+                                        </button> :
+                                        <button
+                                            className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                            onClick={() => handleNext()}
+                                            disabled={true}
+                                        >
+                                            {'Next ->'}
+                                        </button>
+                                }
+                            </div>
+                    }
+
                 </div>
             </div>
         </Widget>
