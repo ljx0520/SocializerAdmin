@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {useRouter} from 'next/router';
 import type {NextPage} from 'next';
-import request from "service/fetch";
+import request from "lib";
+import getConfig from 'next/config';
 
+const {publicRuntimeConfig} = getConfig();
 
 type Props = {
     children: React.ReactNode
@@ -34,13 +36,14 @@ const RouteGuard: NextPage<Props> = ({children}) => {
     }, []);
 
     function authCheck(url: string) {
+        console.log(url)
         // redirect to login page if accessing a private page and not logged in
         const publicPaths = [
-            '/login',
-            '/logout',
-            '/api/user/login',
-            '/api/user/logout',
-            '/404'];
+            publicRuntimeConfig.backendUrl + '/login',
+            publicRuntimeConfig.backendUrl + '/logout',
+            publicRuntimeConfig.backendUrl + '/api/user/login',
+            publicRuntimeConfig.backendUrl + '/api/user/logout',
+            publicRuntimeConfig.backendUrl + '/404'];
         const path = url.split('?')[0];
 
         if (!publicPaths.includes(path)) {

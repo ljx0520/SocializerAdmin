@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextBuildId = require('next-build-id');
 const nextConfig = {
+    basePath: '/socializer/portal',
     reactStrictMode: true,
     experimental: {
         outputStandalone: true,
@@ -11,8 +12,12 @@ const nextConfig = {
         // your project has ESLint errors.
         ignoreDuringBuilds: true,
     },
-    generateBuildId: () => nextBuildId({dir: __dirname})
+    // generateBuildId: () => nextBuildId({dir: __dirname})
     // swcMinify: true,
+    publicRuntimeConfig: {
+        // Will be available on both server and client
+        backendUrl: '/socializer/portal',
+    },
 }
 
 module.exports = nextConfig

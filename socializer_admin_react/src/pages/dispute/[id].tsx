@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import ReactTimeago from "react-timeago";
-import request from "service/fetch";
+import request from "lib";
 import {formatCurrency, formatDate, formatNumber, getAge, IMAGE_ROOT} from "lib";
 import {notify} from "lib/notify";
 import {ChangeEvent, useEffect, useState} from "react";

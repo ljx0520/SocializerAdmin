@@ -6,7 +6,7 @@ import {
 import {useReactTable, getCoreRowModel, createColumnHelper, flexRender, Table} from "@tanstack/react-table";
 import {useEffect, useState} from "react";
 import {trackPromise} from "react-promise-tracker";
-import request from "service/fetch";
+import request from "lib";
 import {defaultPage, formatDate, IPage} from "lib";
 import Link from "next/link";
 import Widget from "components/widget";

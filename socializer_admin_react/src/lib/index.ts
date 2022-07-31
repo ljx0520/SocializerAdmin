@@ -2,6 +2,10 @@ import jwt_decode from 'jwt-decode';
 
 const {format} = require('date-fns');
 
+import axios from 'axios';
+import getConfig from 'next/config';
+
+const {publicRuntimeConfig} = getConfig();
 
 export const BASE_URL = "https://api.muslimlife.com.au/socializer/admin";
 
@@ -16,8 +20,9 @@ export const ironOptions = {
     ttl: COOKIE_MAX_AGE, // - 60 s
     // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
     cookieOptions: {
+        domain: process.env.NODE_ENV === "production" ? ".muslimlife.com.au" : undefined,
         // maxAge: COOKIE_MAX_AGE, // 1 day
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production"
     },
 }
 
@@ -127,3 +132,24 @@ export const consoleLog = (message?: any, ...optionalParams: any[]) => {
         console.log(message, ...optionalParams);
     }
 }
+
+const requestInstance = axios.create({
+    baseURL: publicRuntimeConfig.backendUrl,
+    timeout: 10000
+});
+
+requestInstance.interceptors.request.use(
+    (config) => config,
+    (error) => Promise.reject(error)
+);
+
+requestInstance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+export default requestInstance;

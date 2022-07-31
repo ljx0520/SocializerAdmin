@@ -1,19 +1,26 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: params-test-express-ingress
-  namespace: params
+  name: socializer-admin-react-ingress
+  namespace: socializer-admin
   annotations:
     kubernetes.io/ingress.class: kong
     konghq.com/strip-path: "true"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
+  tls:
+    - secretName: muslimlife-com-au
+      hosts:
+        - api.muslimlife.com.au
   rules:
-    - http:
+    - host: api.muslimlife.com.au
+      http:
         paths:
-          - path: /test/
+          - path: /socializer/portal/
             pathType: Prefix
             backend:
               service:
-                name: params-test-express
+                name: socializer-admin-react
                 port:
-                  number: 9000
+                  number: 3000

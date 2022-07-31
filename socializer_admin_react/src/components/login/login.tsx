@@ -4,7 +4,7 @@ import {InputWrapper} from "components/react-hook-form/input-wrapper";
 import {Label} from "components/react-hook-form/label";
 import {ErrorMessage} from "components/react-hook-form/error-message";
 import {Input} from "components/react-hook-form/input";
-import request from 'service/fetch';
+import request from "lib";
 import {notify} from "lib/notify";
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
@@ -44,7 +44,6 @@ const Index: React.FC = () => {
                     notify(res.data.msg, "warn")
                 }
             }));
-
     };
 
     return (

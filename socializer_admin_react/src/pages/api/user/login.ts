@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import {withIronSessionApiRoute} from "iron-session/next";
 import {ISession} from "pages/api";
-import request from 'service/fetch';
+import request from "lib";
 import {ironOptions, BASE_URL} from "lib";
 
 export default withIronSessionApiRoute(login, ironOptions);

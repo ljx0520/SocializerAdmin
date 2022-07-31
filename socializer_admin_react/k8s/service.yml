@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: params-test-express
-  namespace: params
+  name: socializer-admin-react
+  namespace: socializer-admin
   labels:
-    app: params-test-express
+    app: socializer-admin-react
 spec:
   ports:
-    - port: 9000
-      targetPort: 9000
+    - port: 3000
+      name: socializer-admin-react
+      targetPort: 3000
   selector:
-    app: params-test-express
+    app: socializer-admin-react
