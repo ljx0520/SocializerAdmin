@@ -19,6 +19,9 @@ import {NextPage} from "next";
 import RouteGuard from "components/route-guard";
 import {usePromiseTracker} from "react-promise-tracker";
 import {useEffect} from "react";
+import getConfig from 'next/config';
+
+const {publicRuntimeConfig} = getConfig();
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -47,6 +50,7 @@ function App({Component, pageProps}: IProps) {
                     name="viewport"
                     content="width=device-width, initial-scale=1, shrink-to-fit=no"
                 />
+                <link rel="icon" href={`${publicRuntimeConfig.backendUrl}/favicon.ico`} />
                 <title>Socializer Admin</title>
             </Head>
             <Provider store={rootStore.store}>
