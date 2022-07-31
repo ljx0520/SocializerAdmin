@@ -1,9 +1,10 @@
 import jwt_decode from 'jwt-decode';
 
-const {format} = require('date-fns');
+// const {format} = require('date-fns');
 
 import axios from 'axios';
 import getConfig from 'next/config';
+import moment from "moment";
 
 const {publicRuntimeConfig} = getConfig();
 
@@ -88,8 +89,9 @@ export function formatDate(date: string): string {
         return "NA"
     }
     try {
-        var parsedDate = new Date(date);
-        return format(parsedDate, 'EEEE, MMMM do, yyyy, hh:mm a')
+        var parsedDate = moment(date, 'YYYY-MM-DD HH:mm:ss UTC');
+        // var parsedDate = new Date(date);
+        return parsedDate.format('ddd, MMMM do, yyyy, hh:mm a')
     } catch (e) {
         return `Date Format Error ${date}`
     }
@@ -98,7 +100,7 @@ export function formatDate(date: string): string {
 
 
 export function getAge(date: string): string {
-    var parsedDate = new Date(date);
+    var parsedDate = new moment(date, 'YYYY-MM-DD HH:mm:ss UTC').toDate();
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var age = currentYear - parsedDate.getFullYear();
@@ -134,6 +136,7 @@ export const consoleLog = (message?: any, ...optionalParams: any[]) => {
 }
 
 const requestInstance = axios.create({
+    // @ts-ignore
     baseURL: publicRuntimeConfig.backendUrl,
     timeout: 10000
 });
