@@ -34,7 +34,7 @@ async function search(req: NextApiRequest, res: NextApiResponse) {
             data: data
         });
     }).catch((error: any) => {
-        console.log(error)
+        // console.log(error)
         res.status(200).json({
             code: error.response?.status || 500,
             msg: error.response?.data?.detail || "Unexpected Error"

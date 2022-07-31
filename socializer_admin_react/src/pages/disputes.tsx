@@ -183,7 +183,7 @@ const Tab0 = () => {
                 })
                 .then((res: any) => {
                     if (res.data.code === 200) {
-                        console.log(res.data.data)
+                        // console.log(res.data.data)
                         var data = res.data.data;
                         var newPage: IPage = {
                             count: data.count,

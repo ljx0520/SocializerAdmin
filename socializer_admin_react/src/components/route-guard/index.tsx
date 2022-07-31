@@ -36,7 +36,7 @@ const RouteGuard: NextPage<Props> = ({children}) => {
     }, []);
 
     function authCheck(url: string) {
-        console.log(url)
+        // console.log(url)
         // redirect to login page if accessing a private page and not logged in
         const publicPaths = [
             publicRuntimeConfig.backendUrl + '/login',

@@ -4,15 +4,19 @@ import Link from "next/link";
 import {FiChevronRight} from "react-icons/fi";
 import {NavigationState} from "lib/navigations";
 
+import getConfig from 'next/config';
+
+const {publicRuntimeConfig} = getConfig();
+
 const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
     const [hidden, setHidden] = useState<boolean>(true);
     const router = useRouter();
     const {pathname} = router;
     let active = pathname === url ? true : false;
-    if (pathname === "/" && url === "/dashboard") {
+    if (pathname === publicRuntimeConfig.backendUrl && url === "/dashboard") {
         active = true;
     }
-    if (pathname === "/" && url !== "/dashboard") {
+    if (pathname === publicRuntimeConfig.backendUrl && url !== "/dashboard") {
         active = false;
     }
     if (items.length === 0) {
