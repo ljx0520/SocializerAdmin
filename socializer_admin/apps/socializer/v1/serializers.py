@@ -190,6 +190,12 @@ class DisputeUpdateSerializer(serializers.ModelSerializer):
         if self.instance.dispute_status == "Processing" and dispute_status == "Resolved":
             attrs['dispute_resolved_at'] = datetime.now(timezone.utc)
             attrs['dispute_resolved_by'] = user.id
+        if self.instance.dispute_status == "Submitted" and dispute_status == "Resolved":
+            curr = datetime.now(timezone.utc)
+            attrs['dispute_processed_at'] = curr
+            attrs['dispute_processed_by'] = user.id
+            attrs['dispute_resolved_at'] = curr
+            attrs['dispute_resolved_by'] = user.id
 
         note = attrs.get('note')
         if note:
