@@ -1,13 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import getConfig from 'next/config';
+
+const {publicRuntimeConfig} = getConfig();
 
 const ErrorPage: React.FC = () => {
     return (
         <div className="flex flex-col w-full max-w-xl text-center">
             <Image
                 className="object-contain w-auto h-64 mb-8"
-                src="/images/illustration.svg"
+                src={`${publicRuntimeConfig.backendUrl}/images/illustration.svg`}
+                width={400}
+                height={400}
                 alt="svg"
             />
             <h1 className="text-6xl text-blue-500 mb-4">404</h1>
