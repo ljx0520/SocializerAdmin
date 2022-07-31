@@ -9,6 +9,7 @@ export default withIronSessionApiRoute(search, ironOptions);
 // get disputes list
 async function search(req: NextApiRequest, res: NextApiResponse) {
     const session: ISession = req.session;
+
     const {dispute_status = '', page = '1'} = req.body;
 
     const url = `${BASE_URL}/v1/disputes/`;
@@ -33,6 +34,7 @@ async function search(req: NextApiRequest, res: NextApiResponse) {
             data: data
         });
     }).catch((error: any) => {
+        console.log(error)
         res.status(200).json({
             code: error.response?.status || 500,
             msg: error.response?.data?.detail || "Unexpected Error"

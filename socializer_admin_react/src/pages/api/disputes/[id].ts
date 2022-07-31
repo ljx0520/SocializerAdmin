@@ -54,7 +54,7 @@ async function getDetail(req: NextApiRequest, res: NextApiResponse) {
 
             const {data} = response as any;
 
-            console.log(data)
+            // console.log(data)
 
             res.status(200).json({
                 code: 200,

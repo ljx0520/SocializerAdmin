@@ -29,7 +29,6 @@ declare module "iron-session" {
     }
 }
 
-
 export type IJWT = {
     token_type: string,
     exp: number,

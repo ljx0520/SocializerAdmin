@@ -13,6 +13,7 @@ import Widget from "components/widget";
 import ReactTimeago from "react-timeago";
 import {Dispute} from "lib/types";
 import {notify} from "lib/notify";
+import {useRouter} from "next/router";
 
 const columnHelper = createColumnHelper<Dispute>()
 
@@ -161,6 +162,9 @@ const Tab = (props: ITabProps) => {
 };
 
 const Tab0 = () => {
+
+    const router = useRouter();
+
     const [data, setData] = useState(() => [])
     const [page, setPage] = useState<IPage>(() => defaultPage)
 
@@ -179,6 +183,7 @@ const Tab0 = () => {
                 })
                 .then((res: any) => {
                     if (res.data.code === 200) {
+                        console.log(res.data.data)
                         var data = res.data.data;
                         var newPage: IPage = {
                             count: data.count,
@@ -197,6 +202,12 @@ const Tab0 = () => {
                     }
                 }));
     }
+
+    useEffect(() => {
+        if (router.isReady) {
+            searchDispute(page.page_number);
+        }
+    }, [router.isReady])
 
     useEffect(() => {
         return () => {
@@ -218,6 +229,9 @@ const Tab0 = () => {
 };
 
 const Tab1 = () => {
+
+    const router = useRouter();
+
     const [data, setData] = useState(() => [])
     const [page, setPage] = useState<IPage>(() => defaultPage)
 
@@ -256,10 +270,10 @@ const Tab1 = () => {
     }
 
     useEffect(() => {
-        return () => {
+        if (router.isReady) {
             searchDispute(page.page_number);
         }
-    }, [])
+    }, [router.isReady])
 
 
     const handlePrev = () => {
@@ -276,6 +290,9 @@ const Tab1 = () => {
 };
 
 const Tab2 = () => {
+
+    const router = useRouter();
+
     const [data, setData] = useState<Dispute[]>(() => [])
     const [page, setPage] = useState<IPage>(() => defaultPage)
 
@@ -314,10 +331,10 @@ const Tab2 = () => {
     }
 
     useEffect(() => {
-        return () => {
+        if (router.isReady) {
             searchDispute(page.page_number);
         }
-    }, [])
+    }, [router.isReady])
 
 
     const handlePrev = () => {
