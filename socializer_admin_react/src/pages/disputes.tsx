@@ -7,7 +7,7 @@ import {useReactTable, getCoreRowModel, createColumnHelper, flexRender, Table} f
 import {useEffect, useState} from "react";
 import {trackPromise} from "react-promise-tracker";
 import request from "lib";
-import {defaultPage, formatDate, IPage} from "lib";
+import {defaultPage, formatDateTime, IPage} from "lib";
 import Link from "next/link";
 import Widget from "components/widget";
 import ReactTimeago from "react-timeago";
@@ -43,21 +43,21 @@ const columns = [
     columnHelper.accessor('created_at', {
         header: () => 'Created At',
         cell: info => {
-            return <span>{formatDate(info.getValue())} (<ReactTimeago date={info.getValue()}/>) </span>
+            return <span>{formatDateTime(info.getValue())} (<ReactTimeago date={info.getValue()}/>) </span>
         },
         footer: info => info.column.id,
     }),
     columnHelper.accessor('dispute_processed_at', {
         header: () => 'Processed At',
         cell: info => {
-            return <span>{formatDate(info.getValue())}</span>
+            return <span>{formatDateTime(info.getValue())}</span>
         },
         footer: info => info.column.id,
     }),
     columnHelper.accessor('dispute_resolved_at', {
         header: () => 'Resolved At',
         cell: info => {
-            return <span>{formatDate(info.getValue())}</span>
+            return <span>{formatDateTime(info.getValue())}</span>
         },
         footer: info => info.column.id,
     }),
@@ -123,14 +123,14 @@ const Tab = (props: ITabProps) => {
                         {
                             page.previous != null ?
                                 <button
-                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2"
+                                    className="px-4 py-2 text-xs font-bold text-blue-500 uppercase bg-transparent border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700 mr-2 ml-2"
                                     onClick={() => handlePrev()}
                                     disabled={false}
                                 >
                                     {'<- Previous'}
                                 </button> :
                                 <button
-                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2"
+                                    className="px-4 py-2 text-xs font-bold text-slate-300 uppercase bg-transparent border border-grey-500 rounded-lg mr-2 ml-2"
                                     onClick={() => handlePrev()}
                                     disabled={true}
                                 >

@@ -188,7 +188,7 @@ REST_FRAMEWORK = {
         'anon': '60/minute',
         'user': '300/minute'
     },
-    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S UTC",
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%f%z",
 }
 
 SIMPLE_JWT = {

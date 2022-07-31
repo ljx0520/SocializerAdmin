@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 
 import axios from 'axios';
 import getConfig from 'next/config';
-import moment from "moment";
+import moment, {Moment} from "moment";
 
 const {publicRuntimeConfig} = getConfig();
 
@@ -84,23 +84,39 @@ export const defaultPage: IPage = {
     previous: null
 }
 
-export function formatDate(date: string): string {
-    if (date === '0001-01-01 00:00:00 UTC') {
+export function parseDate(date: string): Moment {
+    return moment.utc(date);
+}
+
+export function formatDateTime(date: string): string {
+    if (date === '0001-01-01T00:00:00.000000+0000') {
         return "NA"
     }
     try {
-        var parsedDate = moment(date, 'YYYY-MM-DD HH:mm:ss UTC');
+        var parsedDate = moment.utc(date);
         // var parsedDate = new Date(date);
-        return parsedDate.format('ddd, MMMM do, yyyy, hh:mm a')
+        return parsedDate.format('ddd, MMMM DD, yyyy, hh:mm a UTC')
     } catch (e) {
         return `Date Format Error ${date}`
     }
+}
 
+export function formatDate(date: string): string {
+    if (date === '0001-01-01T00:00:00.000000+0000') {
+        return "NA"
+    }
+    try {
+        var parsedDate = moment.utc(date);
+        // var parsedDate = new Date(date);
+        return parsedDate.format('MMMM DD, yyyy UTC')
+    } catch (e) {
+        return `Date Format Error ${date}`
+    }
 }
 
 
 export function getAge(date: string): string {
-    var parsedDate = new moment(date, 'YYYY-MM-DD HH:mm:ss UTC').toDate();
+    var parsedDate = moment(date, 'YYYY-MM-DD HH:mm:ss UTC').toDate();
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var age = currentYear - parsedDate.getFullYear();

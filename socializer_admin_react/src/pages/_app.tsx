@@ -18,10 +18,13 @@ import {ToastContainer, Slide} from 'react-toastify';
 import {NextPage} from "next";
 import RouteGuard from "components/route-guard";
 import {usePromiseTracker} from "react-promise-tracker";
-import {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import getConfig from 'next/config';
+import LoadingContainer from "../components/loading-container";
 
 const {publicRuntimeConfig} = getConfig();
+
+NProgress.configure({showSpinner: false});
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -35,11 +38,19 @@ interface IProps {
 function App({Component, pageProps}: IProps) {
     const {promiseInProgress} = usePromiseTracker({delay: 500});
 
+    const [loading, setLoading] = useState(() => false)
+
     useEffect(() => {
         if (promiseInProgress) {
-            NProgress.start()
+            setLoading(true);
+            NProgress.start();
         } else {
             NProgress.done()
+            if (loading) {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+            }
         }
     }, [promiseInProgress])
 
@@ -50,11 +61,14 @@ function App({Component, pageProps}: IProps) {
                     name="viewport"
                     content="width=device-width, initial-scale=1, shrink-to-fit=no"
                 />
-                <link rel="icon" href={`${publicRuntimeConfig.backendUrl}/favicon.ico`} />
+                <link rel="icon" href={`${publicRuntimeConfig.backendUrl}/favicon.ico`}/>
                 <title>Socializer Admin</title>
             </Head>
             <Provider store={rootStore.store}>
                 <RouteGuard>
+                    {
+                        loading ? <LoadingContainer loading={loading}/> : <></>
+                    }
                     <Layout>
                         <Component {...pageProps} />
                     </Layout>

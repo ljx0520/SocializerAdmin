@@ -1,8 +1,8 @@
 import {useRouter} from "next/router";
 import {trackPromise} from "react-promise-tracker";
 import ReactTimeago from "react-timeago";
-import request from "lib";
-import {formatCurrency, formatDate, formatNumber, getAge, IMAGE_ROOT} from "lib";
+import request, {formatDate, parseDate} from "lib";
+import {formatCurrency, formatDateTime, formatNumber, getAge, IMAGE_ROOT} from "lib";
 import {notify} from "lib/notify";
 import {ChangeEvent, useEffect, useState} from "react";
 import SectionTitle from "components/section-title";
@@ -18,6 +18,8 @@ import {Textarea} from "components/react-hook-form/textarea";
 import {FiSend} from "react-icons/fi";
 import {Dispute, Offer, Order, UserProfile} from "lib/types";
 import ImageGallery from 'react-image-gallery';
+import {ClipLoader, HashLoader} from "react-spinners";
+import LoadingContainer from "../../components/loading-container";
 
 export type DisputeFormProps = {
     dispute_status: string;
@@ -180,7 +182,7 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
                 </div>
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
-                        <div className="text-sm">{formatDate(dispute.created_at)} (<ReactTimeago
+                        <div className="text-sm">{formatDateTime(dispute.created_at)} (<ReactTimeago
                             date={dispute.created_at}/>)
                         </div>
                     </div>
@@ -195,7 +197,7 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
                     </div>
                     <div className="w-full lg:w-1/2">
                         <div className="flex flex-col w-full">
-                            <div className="text-sm">{formatDate(dispute.dispute_processed_at)}</div>
+                            <div className="text-sm">{formatDateTime(dispute.dispute_processed_at)}</div>
                         </div>
                     </div>
                 </div> : null
@@ -209,7 +211,7 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
                     </div>
                     <div className="w-full lg:w-1/2">
                         <div className="flex flex-col w-full">
-                            <div className="text-sm">{formatDate(dispute.dispute_resolved_at)}</div>
+                            <div className="text-sm">{formatDateTime(dispute.dispute_resolved_at)}</div>
                         </div>
                     </div>
                 </div> : null
@@ -247,8 +249,8 @@ const TabDispute = ({dispute, onUpdate}: TabDisputeProps) => {
                                 <div className="text-sm">{note.note}</div>
                             </div>
                             <div className="shrink-0">
-                                <div className="text-gray-500 lg:ml-1">{formatDate(note.sent_at)} (<ReactTimeago
-                                    date={note.sent_at}/>)
+                                <div className="text-gray-500 lg:ml-1">{formatDateTime(note.sent_at)} (<ReactTimeago
+                                    date={parseDate(note.sent_at).toDate()}/>)
                                 </div>
                             </div>
                         </div>
@@ -632,7 +634,7 @@ const TabOffer = ({offer}: TabOfferProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(offer.created_at)}
+                            className="text-sm">{formatDateTime(offer.created_at)}
                         </div>
                     </div>
                 </div>
@@ -646,7 +648,7 @@ const TabOffer = ({offer}: TabOfferProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(offer.updated_at)}
+                            className="text-sm">{formatDateTime(offer.updated_at)}
                         </div>
                     </div>
                 </div>
@@ -772,7 +774,7 @@ const TabOffer = ({offer}: TabOfferProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(offer.from_datetime)}
+                            className="text-sm">{formatDateTime(offer.from_datetime)}
                         </div>
                     </div>
                 </div>
@@ -786,7 +788,7 @@ const TabOffer = ({offer}: TabOfferProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(offer.to_datetime)}
+                            className="text-sm">{formatDateTime(offer.to_datetime)}
                         </div>
                     </div>
                 </div>
@@ -805,8 +807,8 @@ const TabOffer = ({offer}: TabOfferProps) => {
                                 <div className="text-sm">{note.note}</div>
                             </div>
                             <div className="shrink-0">
-                                <div className="text-gray-500 lg:ml-1">{formatDate(note.sent_at)} (<ReactTimeago
-                                    date={note.sent_at}/>)
+                                <div className="text-gray-500 lg:ml-1">{formatDateTime(note.sent_at)} (<ReactTimeago
+                                    date={parseDate(note.sent_at).toDate()}/>)
                                 </div>
                             </div>
                         </div>
@@ -858,7 +860,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.created_at)}
+                            className="text-sm">{formatDateTime(order.created_at)}
                         </div>
                     </div>
                 </div>
@@ -872,7 +874,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.updated_at)}
+                            className="text-sm">{formatDateTime(order.updated_at)}
                         </div>
                     </div>
                 </div>
@@ -996,7 +998,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.from_datetime)}
+                            className="text-sm">{formatDateTime(order.from_datetime)}
                         </div>
                     </div>
                 </div>
@@ -1010,7 +1012,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.to_datetime)}
+                            className="text-sm">{formatDateTime(order.to_datetime)}
                         </div>
                     </div>
                 </div>
@@ -1056,7 +1058,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{order.payment_type == "Stripe" ? formatDate(order.paid_at) : formatDate(order.paid_credit_at)}
+                            className="text-sm">{order.payment_type == "Stripe" ? formatDateTime(order.paid_at) : formatDateTime(order.paid_credit_at)}
                         </div>
                     </div>
                 </div>
@@ -1112,7 +1114,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.refund_at)}
+                            className="text-sm">{formatDateTime(order.refund_at)}
                         </div>
                     </div>
                 </div>
@@ -1154,7 +1156,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                 <div className="w-full lg:w-1/2">
                     <div className="flex flex-col w-full">
                         <div
-                            className="text-sm">{formatDate(order.payout_at)}
+                            className="text-sm">{formatDateTime(order.payout_at)}
                         </div>
                     </div>
                 </div>
@@ -1254,7 +1256,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                         <div className="w-full lg:w-1/2">
                             <div className="flex flex-col w-full">
                                 <div
-                                    className="text-sm">{formatDate(order.extended_datetime)}
+                                    className="text-sm">{formatDateTime(order.extended_datetime)}
                                 </div>
                             </div>
                         </div>
@@ -1298,7 +1300,7 @@ const TabOrder = ({order}: TabOrderProps) => {
                         <div className="w-full lg:w-1/2">
                             <div className="flex flex-col w-full">
                                 <div
-                                    className="text-sm">{order.extended_payment_type == "Stripe" ? formatDate(order.extended_paid_at) : formatDate(order.extended_paid_credit_at)}
+                                    className="text-sm">{order.extended_payment_type == "Stripe" ? formatDateTime(order.extended_paid_at) : formatDateTime(order.extended_paid_credit_at)}
                                 </div>
                             </div>
                         </div>
@@ -1333,8 +1335,8 @@ const TabOrder = ({order}: TabOrderProps) => {
                                 <div className="text-sm">{note.note}</div>
                             </div>
                             <div className="shrink-0">
-                                <div className="text-gray-500 lg:ml-1">{formatDate(note.sent_at)} (<ReactTimeago
-                                    date={note.sent_at}/>)
+                                <div className="text-gray-500 lg:ml-1">{formatDateTime(note.sent_at)} (<ReactTimeago
+                                    date={parseDate(note.sent_at).toDate()}/>)
                                 </div>
                             </div>
                         </div>
@@ -1399,6 +1401,12 @@ export default function Index() {
                                         // other user
                                         tabsTemp = [
                                             ...tabsTemp,
+                                            {
+                                                index: 1,
+                                                title: "Request User",
+                                                active: false,
+                                                content: <TabUserProfile userProfile={data.user_profile}/>
+                                            } as TabProps,
                                             {
                                                 index: 2,
                                                 title: "Dispute Object (User Profile)",
@@ -1575,7 +1583,8 @@ export default function Index() {
                 </div>
             </div>
 
-        </> : <>Not Found</>
+        </> : <>
+        </>
     )
 
 }

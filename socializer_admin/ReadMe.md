@@ -36,4 +36,5 @@ kubectl apply -f ./k8s/ingress.yml
 ## Forward http to https
 ```
 kubectl patch ingress socializer-admin-app-ingress -n socializer-admin -p '{"metadata":{"annotations":{"konghq.com/protocols":"https","konghq.com/https-redirect-status-code":"301"}}}'
+
 ```
